@@ -1,113 +1,131 @@
-import Image from 'next/image'
+"use client"
+import type { NextPage } from "next";
+import { redirect } from "next/navigation";
+// import Card from "../components/web/Card";
+import Link from "next/link";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+// import Navbar from "../components/web/Navbar";
+// import Footer from "../components/web/Footer";
+// import { Session, createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import Card from "@/components/web/Card";
+import Navbar from "@/components/web/Navbar";
+// Shadcn imports
+import { AspectRatio } from "@/components/ui/aspect-ratio"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 
-export default function Home() {
+const Index: NextPage = () => {
+  const [url, setUrl] = useState<string>("");
+  // const [session, setSession] = useState<Session | null>();
+  // const supabase = createClientComponentClient()
+
+  // useEffect(() => {
+  //   const getSession = async () => {
+  //     const session = await supabase.auth.getSession();
+  //     setSession(session.data.session)
+  //   }
+
+  //   getSession()
+  // }, [])
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <>
+      <Navbar />
+      <div className='lg:mt-20 flex flex-col h-screen justify-between antialiased'>
+        <div className="w-full">
+          <div className="w-full mx-auto">
+            <div className="mb-72">
+              <div className="mb-10 flex flex-col lg:flex-row justify-between xl:mx-20 2xl:mx-60">
+                <div className="md:text-6xl text-3xl font-extrabold mx-5 text-center lg:text-start lg:text-5xl xl:text-7xl">
+                  <h1>Long Live Streams to,</h1>
+                  <h1><span className="text-primary_pink">Engaging </span>Clips,</h1>
+                  <h1 className="text-primary_blue">With 1-Click</h1>
+                  <div className="text-lg lg:w-2/3 mx-auto lg:mx-0 font-semibold text-muted-foreground pt-2">
+                    <p>FusionClips uses <span className="text-primary">Artificial intelligence</span> to find out Best Clips from your Gaming Streams</p>
+                  </div>
+                  <div className="text-base font-light my-5">
+                    <form action="">
+                      <div className="flex lg:flex-row flex-col items-center justify-start gap-5">
+                        <Input
+                          type="text"
+                          value={url}
+                          className="lg:w-fit"
+                          onChange={(e) => setUrl(e.target.value)}
+                          placeholder="Enter Twitch URL here"
+                        />
+                        <Button
+                          variant="default"
+                          type="submit"
+                          disabled={url ? false : true}
+                          onClick={() => redirect("/account")}
+                        >
+                          {/* <Link href="/clips/twitch"> */}
+                          Get Clips
+                          {/* </Link> */}
+                        </Button>
+                      </div>
+                    </form>
+                  </div>
+                  <div className="w-fit lg:flex items-center justify-start gap-5">
+                    {/* <a href="https://www.producthunt.com/posts/fusionclips?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-fusionclips" target="_blank">
+                  <img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=410171&theme=light" alt="FusionClips - Convert&#0032;boring&#0032;streams&#0032;to&#0032;funny&#0032;attention&#0032;grabbing&#0032;clips | Product Hunt" width="250" height="54" />
+                </a> */}
+                  </div>
+                </div>
+                <div className="w-2/5 hidden lg:block">
+                  <AspectRatio ratio={16 / 9} className="mx-auto">
+                    <Image src="/twitch.png" className="mx-auto" fill alt="twtich" />
+                  </AspectRatio>
+                </div>
+                <Image src="/twitch.png" className="mx-auto lg:hidden" width={1280} height={720} alt="twtich" />
+              </div>
+              <div>
+                <div>
+                  <h1 className="font-extrabold text-gray-400 text-lg lg:text-3xl text-center select-none">
+                    Supported Platforms
+                  </h1>
+                </div>
+                <div className="flex justify-center items-center gap-20 w-full overflow-x-scroll scrol">
+                  <Image src="/twitch_logo_white.png" className="grayscale opacity-60 backdrop-grayscale-0" alt="twitch" width={150} height={100} />
+                  <Image src="/youtube_logo.png" className="grayscale opacity-90 backdrop-grayscale-0" alt="youtube" width={150} height={250} />
+                  <Image src="/kick_logo.png" className="grayscale opacity-90 backdrop-grayscale-0" alt="kick" width={130} height={1} />
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-col items-center mt-10">
+              <div id="features" className="w-full flex justify-center items-center">
+                <div className="lg:w-2/3 mx-2">
+                  <h1 className="font-extrabold text-2xl xl:text-5xl md:text-4xl text-center">
+                    Tired of watching your long Streams to find Content?
+                  </h1>
+                  <p className="text-center mt-5 text-sm text-gray-500 lg:text-xl md:text-xl sm:mx-2">Using <span className="text-primary">Artificial intelligence</span> convert your long <span className="text-primary_blue">Boooring</span> streams to <span className="text-primary_pink">Attention</span> Grabbing Clips</p>
+                  <div className="flex justify-center mt-10">
+                    <Link href="/clips">
+                      <Button
+                        variant="default"
+                        onClick={() => redirect("/clips")}
+                      >
+                        Get Started
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="flex justify-center">
+              <div className="mt-20 lg:w-2/3 lg:inline-grid lg:grid-cols-2 mx-5 flex flex-col gap-5">
+                <Card title="AI Funny Clip Finder" emo="🔎" desc="Using AI find the most Engaging & Funny Clips from your video/live-streams." />
+                <Card title="AI Generated Captions" emo="🆎" desc="Auto Generated Captions with the use of Automatic Speech Recognition (ASR) system which supports 98 Languages." tag="Coming Soon" />
+                <Card title="Emojis Support" emo="😊" desc="Automatic Emojis added in each sentence to glow up the captions." tag="Coming Soon" />
+                <Card title="Customization" emo="✏️" desc="Edit all Caption or Emojis, change the effect of captions on screen." tag="Coming Soon" />
+              </div>
+            </div>
+          </div>
         </div>
+        {/* <Footer /> */}
       </div>
+    </>
+  );
+};
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore the Next.js 13 playground.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
-}
+export default Index;
