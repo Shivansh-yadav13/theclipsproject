@@ -5,6 +5,8 @@ import Image from 'next/image';
 import { redirect } from "next/navigation";
 // import DiscordBtn from './DiscordBtn';
 import { useEffect, useState } from 'react';
+import { useSupabase } from '@/app/supabase/supabase-provider';
+import { User } from '@supabase/supabase-js';
 // import { Session } from '@supabase/supabase-js';
 // import SignOutButton from './Signout';
 // import Dropdown from './Dropdown';
@@ -12,6 +14,21 @@ import { useEffect, useState } from 'react';
 
 export default function Navbar() {
   const [menu, setMenu] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const { supabase } = useSupabase();
+
+  useEffect(() => {
+    const getUser = async () => {
+      const { data, error } = await supabase.auth.getUser();
+      if (error) {
+        console.log(error)
+        setUser(null);
+      }
+      setUser(data.user);
+    }
+    getUser()
+  }, [supabase.auth])
+
 
   return (
     <>
@@ -80,6 +97,19 @@ export default function Navbar() {
               Pricing
             </Link>
           </li>
+          {
+            user ?
+              <div className='flex items-center gap-2'>
+                <Image src={user.user_metadata.avatar_url} className='rounded-full' alt='user-profile-picture' width={30} height={30} />
+                {user.user_metadata.name.length >= 16 ? `${user.user_metadata.name.substring(0, 15)}...` : `${user.user_metadata.name}`}
+              </div>
+              :
+              <li className='cursor-pointer'>
+                <Link href="/account" className='hover:text-prime_light'>
+                  Login/Create Account
+                </Link>
+              </li>
+          }
         </ul>
       </nav>
     </>

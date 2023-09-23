@@ -42,6 +42,7 @@ import Image from "next/image"
 import Link from "next/link"
 
 import { cn } from "@/lib/utils"
+import AuthUI from "@/components/web/AuthUI"
 // import { buttonVariants } from "@/registry/new-york/ui/button"
 // import { UserAuthForm } from "@/app/examples/authentication/components/user-auth-form"
 
@@ -75,6 +76,7 @@ export default function AuthenticationPage() {
                 </p>
               </div>
               {/* <UserAuthForm /> */}
+              <AuthUI />
               <p className="px-8 text-center text-sm text-muted-foreground">
                 By clicking continue, you agree to our{" "}
                 <Link

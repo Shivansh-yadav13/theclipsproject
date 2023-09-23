@@ -1,4 +1,4 @@
-import Navbar from '@/components/web/Navbar'
+import SupabaseProvider from "@/app/supabase/supabase-provider";
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
@@ -18,12 +18,14 @@ export default function RootLayout({
   return (
     <html lang="en" className='dark overflow-x-hidden'>
       <body className={inter.className}>
-        <div className='flex flex-col h-screen justify-between'>
-          {/* <Navbar /> */}
-          <div className='h-screen w-screen'>
-            {children}
+        <SupabaseProvider>
+          <div className='flex flex-col h-screen justify-between'>
+            {/* <Navbar /> */}
+            <div className='h-screen w-screen'>
+              {children}
+            </div>
           </div>
-        </div>
+        </SupabaseProvider>
       </body>
     </html>
   )
