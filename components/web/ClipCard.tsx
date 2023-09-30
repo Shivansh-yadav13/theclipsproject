@@ -9,7 +9,7 @@ import Image from "next/image";
 
 export default function ClipCard({ time_stamp, f_score, twitch_url }: { time_stamp: number, f_score: number, twitch_url: string }) {
   const [downloading, setDownloading] = useState<boolean>(false);
-  const [progress, setProgress] = useState<number>(13);
+  const [progress, setProgress] = useState<number>(0);
   const handleDownload = async () => {
     try {
       setDownloading(true);
@@ -17,9 +17,10 @@ export default function ClipCard({ time_stamp, f_score, twitch_url }: { time_sta
       formData.append("twitch_url", twitch_url)
       const seconds = time_stamp.toString()
       formData.append('start_timestamps_sec', seconds)
-      const response = await axios.post("http://localhost:5000/download_clip", formData);
+      setProgress(30);
+      const response = await axios.post("http://157.230.236.14:5000/download_clip", formData);
       const video_data = response.data;
-
+      setProgress(70);
       const videoBlob = new Blob([Buffer.from(video_data, 'base64')], { type: 'video/mp4' });
 
       const videoUrl = URL.createObjectURL(videoBlob);
@@ -30,6 +31,7 @@ export default function ClipCard({ time_stamp, f_score, twitch_url }: { time_sta
       link.click();
 
       URL.revokeObjectURL(videoUrl);
+      setProgress(100)
       setDownloading(false);
     } catch (error) {
       setDownloading(false);
@@ -68,10 +70,10 @@ export default function ClipCard({ time_stamp, f_score, twitch_url }: { time_sta
       </div>
       {
         downloading ?
-          <Alert className="w-[20%] flex flex-col gap-3 fixed bottom-0 right-0 m-20 bg-primary-foreground" >
+          <Alert className="w-fit flex flex-col gap-3 fixed bottom-0 lg:right-0 right-2 m-20 bg-primary-foreground" >
             <AlertTitle>Downloading Clip...</AlertTitle>
             <AlertDescription>
-              <p className="mb-2">{twitch_url + `?t=${time_stamp}s`}</p>
+              <p className="mb-2 text-base">{twitch_url + `?t=${time_stamp}s`}</p>
               <Progress value={progress} className="w-full" />
             </AlertDescription>
           </Alert>
