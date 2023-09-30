@@ -14,7 +14,7 @@ export async function GET(request: Request) {
       return new Response("Error in Session");
     }
 
-    const userId = session.data.session?.user.id
+    const userId = session.data.session!.user.id
 
     const { data, error } = await supabase
     .from('users')
