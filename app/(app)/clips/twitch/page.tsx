@@ -61,6 +61,7 @@ export default function TwitchClips() {
   const [tshour, setTshour] = useState<number>(0);
   const [tsmin, setTsmin] = useState<number>(0);
   const [tssec, setTssec] = useState<number>(0);
+  const [btnLoading, setBtnLoading] = useState<boolean>(false);
   const { supabase } = useSupabase();
   const router = useRouter();
 
@@ -93,29 +94,30 @@ export default function TwitchClips() {
         if (finalClips.length == 0) {
           setMessage(true);
           setLoading(false);
+          setBtnLoading(false);
         } else {
           setClipsData(finalClips);
           setLoading(false);
+          setBtnLoading(false);
         }
         await setRequestStatus(false)
       } else {
         setRequestMessage(true);
+        setBtnLoading(false);
       }
     }
     catch {
       console.log("Some Error");
       setLoading(false);
+      setBtnLoading(false);
       setErrorMessage(true);
       await setRequestStatus(false);
     }
     await setRequestStatus(false);
   }
-  
-  const getUser = async () => {
-    
-  }
 
   const handleURLSubmit = async () => {
+    setBtnLoading(true);
     const userResponse = await supabase.auth.getUser();
     if (userResponse.error) {
       console.log(userResponse.error)
@@ -124,13 +126,14 @@ export default function TwitchClips() {
     if (userResponse.data.user) {
       const userID = userResponse.data.user.id;
       const { data, error } = await supabase
-        .from('customers')
+        .from('subscriptions')
         .select()
-        .eq('id', userID)
+        .eq('user_id', userID)
       if (error) {
         console.log(error)
         router.push("/account")
       }
+      console.log(data);
       if (data?.length == 0) {
         router.push("/pricing")
       } else {
@@ -147,12 +150,12 @@ export default function TwitchClips() {
           tempUrlSubmit(inputUrl);
         } else {
           setUrlBanner(true);
+          setBtnLoading(false);
         }
       }
-  } else {
-    router.push("/account")
-  }
-    
+    } else {
+      router.push("/account")
+    }
   }
 
   return (
@@ -178,10 +181,10 @@ export default function TwitchClips() {
               }}
             >
               {
-                loading ?
-                "Loading..."
-                :
-                "Get Clips"
+                btnLoading ?
+                  "Loading..."
+                  :
+                  "Get Clips"
               }
             </Button>
           </div>

@@ -5,8 +5,6 @@ import { Database } from '@/types_db';
 import { postData } from '@/utils/helper';
 import { getStripe } from '@/utils/stripe-client';
 import { Session, User } from '@supabase/supabase-js';
-import Image from 'next/image';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Badge } from '../ui/badge';
@@ -50,50 +48,44 @@ export default function Pricing({
   const [billingInterval, setBillingInterval] =
     useState<BillingInterval>('month');
   const [priceIdLoading, setPriceIdLoading] = useState<string>();
-  // const [price, setPrice] = useState<Price>({
-  //   active: true,
-  //   currency: "USD",
-
-  // });
 
   const handleCheckout = async () => {
-    // let price: Price;
-    // price.id = 1;
-    // setPriceIdLoading(price.id);
-    // if (!user) {
-    //   return router.push('/signin');
-    // }
-    // if (subscription) {
-    //   return router.push('/account');
-    // }
-    // try {
-    //   const { sessionId } = await postData({
-    //     url: '/api/create-checkout-session',
-    //     data: { price }
-    //   });
+    const price = products[0].prices[0];
+    setPriceIdLoading(price.id);
+    if (!user) {
+      return router.push('/account');
+    }
+    if (subscription) {
+      return router.push('/account');
+    }
+    try {
+      const { sessionId } = await postData({
+        url: '/api/stripe/create-checkout-session',
+        data: { price }
+      });
 
-    //   const stripe = await getStripe();
-    //   stripe?.redirectToCheckout({ sessionId });
-    // } catch (error) {
-    //   return alert((error as Error)?.message);
-    // } finally {
-    //   setPriceIdLoading(undefined);
-    // }
+      const stripe = await getStripe();
+      stripe?.redirectToCheckout({ sessionId });
+    } catch (error) {
+      return alert((error as Error)?.message);
+    } finally {
+      setPriceIdLoading(undefined);
+    }
   };
 
   return (
     <div className="sm:flex sm:flex-col sm:align-center p-10">
       <h1 className="font-extrabold text-5xl text-center my-10">Plans</h1>
-      {/* <div className="relative self-center bg-slate-200 rounded-lg p-0.5 flex">
+      <div className="relative self-center bg-primary-foreground rounded-lg p-0.5 flex mb-10">
           <button type="button"
-            className="relative w-1/2 rounded-md py-2 text-sm font-medium whitespace-nowrap focus:outline-none sm:w-auto sm:px-8 bg-slate-50 border-slate-50  shadow-sm">Monthly
+            className="relative w-1/2 rounded-md py-2 text-sm font-medium whitespace-nowrap focus:outline-none sm:w-auto sm:px-8 border-2 border-primary_blue shadow-sm">Monthly
             billing
           </button>
           <button type="button"
             className="ml-0.5 relative w-1/2 border rounded-md py-2 text-sm font-medium whitespace-nowrap focus:outline-none sm:w-auto sm:px-8 border-transparent ">Yearly
             billing
           </button>
-        </div> */}
+        </div>
       <div className="flex justify-center">
         <div className="border border-primary_pink rounded-lg shadow-sm divide-y divide-primary_pink">
           <div className="p-6">
@@ -105,10 +97,10 @@ export default function Pricing({
               <span className="text-4xl font-bold tracking-tighter ml-3">$10</span>
               <span className="text-base font-medium">/mo</span>
             </p>
-            <Button 
-            variant="default" 
-            className="mt-8 block w-full bg-primary rounded-md py-2 text-sm font-semibold text-secondary text-center"
-            onClick={() => handleCheckout()}
+            <Button
+              variant="default"
+              className="mt-8 block w-full bg-primary rounded-md py-2 text-sm font-semibold text-secondary text-center"
+              onClick={() => handleCheckout()}
             >Purchase</Button>
           </div>
           <div className="pt-6 pb-8 px-6">
@@ -117,7 +109,7 @@ export default function Pricing({
               <li className="flex space-x-3">
                 <svg xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0 h-5 w-5 text-green-400" width="24"
                   height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none"
-                  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                   <path d="M5 12l5 5l10 -10"></path>
                 </svg>
@@ -126,7 +118,7 @@ export default function Pricing({
               <li className="flex space-x-3">
                 <svg xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0 h-5 w-5 text-green-400" width="24"
                   height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none"
-                  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                   <path d="M5 12l5 5l10 -10"></path>
                 </svg>
@@ -135,7 +127,7 @@ export default function Pricing({
               <li className="flex space-x-3">
                 <svg xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0 h-5 w-5 text-green-400" width="24"
                   height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none"
-                  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                   <path d="M5 12l5 5l10 -10"></path>
                 </svg>
@@ -144,7 +136,7 @@ export default function Pricing({
               <li className="flex space-x-3">
                 <svg xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0 h-5 w-5 text-green-400" width="24"
                   height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none"
-                  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                   <path d="M5 12l5 5l10 -10"></path>
                 </svg>
@@ -153,7 +145,7 @@ export default function Pricing({
               <li className="flex space-x-3">
                 <svg xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0 h-5 w-5 text-green-400" width="24"
                   height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none"
-                  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                   <path d="M5 12l5 5l10 -10"></path>
                 </svg>

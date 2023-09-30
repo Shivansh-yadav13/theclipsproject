@@ -1,5 +1,3 @@
-import Link from "next/link";
-import { Badge } from "@/components/ui/badge"
 import {
   getSession,
   getSubscription,
@@ -12,8 +10,8 @@ export default async function PricingPage() {
   const [session, products, subscription] = await Promise.all([
     getSession(),
     getActiveProductsWithPrices(),
-    getSubscription()
-  ]);
+    getSubscription(),
+  ])
 
   return (
     <>

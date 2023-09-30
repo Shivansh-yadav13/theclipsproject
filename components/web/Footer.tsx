@@ -12,20 +12,17 @@ export default function Footer() {
               <Image src="/fclogo.png" width="50" height="50" alt='logo' />
               <h1 className='text-xl font-extrabold'>Fusion Clips AI</h1>
             </Link>
-            <a href="https://www.producthunt.com/posts/fusionclips?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-fusionclips" target="_blank"><Image src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=410171&theme=dark" alt="FusionClips - Turn&#0032;long&#0032;content&#0032;into&#0032;engaging&#0032;clips | Product Hunt" width="250" height="54" /></a>
+            <Link href="https://www.producthunt.com/posts/fusionclips?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-fusionclips" target="_blank"><Image src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=410171&theme=dark" alt="FusionClips - Turn&#0032;long&#0032;content&#0032;into&#0032;engaging&#0032;clips | Product Hunt" width="250" height="54" /></Link>
           </div>
           <ul className="flex flex-wrap items-center mb-6 text-sm font-medium text-gray-500 sm:mb-0 dark:text-gray-400">
             <li>
-              <a href="#" className="mr-4 hover:underline md:mr-6 ">About</a>
+              <Link href="/privacy" className="mr-4 hover:underline md:mr-6">Privacy Policy</Link>
             </li>
             <li>
-              <a href="#" className="mr-4 hover:underline md:mr-6">Privacy Policy</a>
+              <Link href="/terms" className="mr-4 hover:underline md:mr-6 ">Terms & Conditions</Link>
             </li>
             <li>
-              <a href="#" className="mr-4 hover:underline md:mr-6 ">Licensing</a>
-            </li>
-            <li>
-              <a href="#" className="hover:underline">Contact</a>
+              <Link href="/contact" className="hover:underline">Contact</Link>
             </li>
           </ul>
         </div>
