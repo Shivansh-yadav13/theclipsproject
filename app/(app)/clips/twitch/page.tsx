@@ -65,6 +65,26 @@ export default function TwitchClips() {
   const { supabase } = useSupabase();
   const router = useRouter();
 
+  const getClipsData = async () => {
+    async function wait(ms: number) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+  
+    let clipsData, user_busy_status;
+  
+    do {
+      clipsData = await axios.get(`/api/fusionclipsai/twitch`);
+      user_busy_status = clipsData.data.status;
+  
+      if (user_busy_status) {
+        console.log("Waiting for the process to complete...");
+        await wait(20000);
+      }
+    } while (user_busy_status);
+  
+    return clipsData;
+  };
+
   const tempUrlSubmit = async (url: string) => {
     setErrorMessage(false);
     setMessage(false);
@@ -84,13 +104,9 @@ export default function TwitchClips() {
         setTsmin(0);
         setTssec(0);
         const result = await axios.post(`/api/fusionclipsai/twitch`, { url, timestamps });
-        const clips = result.data.result;
-        const finalClips = [];
-        for (const c of clips) {
-          if (c.is_funny) {
-            finalClips.push(c);
-          }
-        }
+        const clipsData = await getClipsData();
+        const finalClips = clipsData.data.data;
+        console.log(finalClips, clipsData.data)
         if (finalClips.length == 0) {
           setMessage(true);
           setLoading(false);

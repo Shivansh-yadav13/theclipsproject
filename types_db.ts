@@ -237,8 +237,10 @@ export interface Database {
           billing_address: Json | null
           full_name: string | null
           id: string
+          last_request_data: Json[] | null
           payment_method: Json | null
           request_status: boolean
+          server_busy_status: boolean
           total_requests: number
         }
         Insert: {
@@ -246,8 +248,10 @@ export interface Database {
           billing_address?: Json | null
           full_name?: string | null
           id: string
+          last_request_data?: Json[] | null
           payment_method?: Json | null
           request_status?: boolean
+          server_busy_status?: boolean
           total_requests?: number
         }
         Update: {
@@ -255,8 +259,10 @@ export interface Database {
           billing_address?: Json | null
           full_name?: string | null
           id?: string
+          last_request_data?: Json[] | null
           payment_method?: Json | null
           request_status?: boolean
+          server_busy_status?: boolean
           total_requests?: number
         }
         Relationships: [
@@ -286,7 +292,6 @@ export interface Database {
         | "incomplete_expired"
         | "past_due"
         | "unpaid"
-        | "paused"
     }
     CompositeTypes: {
       [_ in never]: never
