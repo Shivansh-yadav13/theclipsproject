@@ -292,6 +292,7 @@ export interface Database {
         | "incomplete_expired"
         | "past_due"
         | "unpaid"
+        | "paused"
     }
     CompositeTypes: {
       [_ in never]: never
