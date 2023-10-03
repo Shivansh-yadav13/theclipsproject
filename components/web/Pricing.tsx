@@ -50,6 +50,9 @@ export default function Pricing({
   const [priceIdLoading, setPriceIdLoading] = useState<string>();
 
   const handleCheckout = async () => {
+    if (!session) {
+      router.push("/account")
+    }
     const price = products[0].prices[0];
     setPriceIdLoading(price.id);
     if (!user) {
@@ -77,81 +80,152 @@ export default function Pricing({
     <div className="sm:flex sm:flex-col sm:align-center p-10">
       <h1 className="font-extrabold text-5xl text-center my-10">Plans</h1>
       <div className="relative self-center bg-primary-foreground rounded-lg p-0.5 flex mb-10">
-          <button type="button"
-            className="relative w-1/2 rounded-md py-2 text-sm font-medium whitespace-nowrap focus:outline-none sm:w-auto sm:px-8 border-2 border-primary_blue shadow-sm">Monthly
-            billing
-          </button>
-          <button type="button"
-            className="hover:cursor-not-allowed ml-0.5 relative w-1/2 border rounded-md py-2 text-sm font-medium whitespace-nowrap focus:outline-none sm:w-auto sm:px-8 border-transparent ">Yearly
-            billing
-          </button>
-        </div>
-      <div className="flex justify-center">
-        <div className="border border-primary_pink rounded-lg shadow-sm divide-y divide-primary_pink">
-          <div className="p-6">
-            <h2 className="text-xl leading-6 font-bold ">Streamer Mode</h2>
-            <p className="mt-2 text-base text-muted-foreground leading-tight">For streamers who want to attract viewers from engaging live moments.</p>
-            <p className="mt-2 text-base text-muted-foreground leading-tight">Create Content 10x Faster.</p>
-            <p className="mt-8">
-              <span className="text-4xl font-bold line-through decoration-primary_pink tracking-tighter">$20</span>
-              <span className="text-4xl font-bold tracking-tighter ml-3">$10</span>
-              <span className="text-base font-medium">/mo</span>
-            </p>
-            <Button
-              variant="default"
-              className="mt-8 block w-full bg-primary rounded-md py-2 text-sm font-semibold text-secondary text-center"
-              onClick={() => handleCheckout()}
-            >Purchase</Button>
+        <button type="button"
+          className="relative w-1/2 rounded-md py-2 text-sm font-medium whitespace-nowrap focus:outline-none sm:w-auto sm:px-8 border-2 border-primary_blue shadow-sm">Monthly
+          billing
+        </button>
+        <button type="button"
+          className="hover:cursor-not-allowed ml-0.5 relative w-1/2 border rounded-md py-2 text-sm font-medium whitespace-nowrap focus:outline-none sm:w-auto sm:px-8 border-transparent ">Yearly
+          billing
+        </button>
+      </div>
+      <div className='xl:flex justify-evenly'>
+        <div className="flex justify-center">
+          <div className="border border-primary_pink rounded-lg shadow-sm divide-y divide-primary_pink">
+            <div className="p-6">
+              <h2 className="text-xl leading-6 font-bold ">Free</h2>
+              <p className="mt-2 text-base text-muted-foreground leading-tight">Get 10 requests for Free and Enjoy making Clips for your Streams</p>
+              <p className="mt-2 text-base text-muted-foreground leading-tight">Create Content 10x Faster.</p>
+              <p className="mt-8">
+                <span className="text-4xl font-bold line-through decoration-primary_pink tracking-tighter">$20</span>
+                <span className="text-4xl font-bold tracking-tighter ml-3">FREE</span>
+              </p>
+              <Button
+                variant="default"
+                className="mt-8 block w-full bg-primary rounded-md py-2 text-sm font-semibold text-secondary text-center"
+                onClick={() => router.push("/clips/twitch")}
+              >Get Started</Button>
+            </div>
+            <div className="pt-6 pb-8 px-6">
+              <h3 className="text-sm font-bold  tracking-wide uppercase">{`What's included`}</h3>
+              <ul role="list" className="mt-4 space-y-3">
+                <li className="flex space-x-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0 h-5 w-5 text-green-400" width="24"
+                    height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none"
+                    strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                    <path d="M5 12l5 5l10 -10"></path>
+                  </svg>
+                  <span className="text-base ">AI Stream Analyzer</span>
+                </li>
+                <li className="flex space-x-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0 h-5 w-5 text-green-400" width="24"
+                    height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none"
+                    strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                    <path d="M5 12l5 5l10 -10"></path>
+                  </svg>
+                  <span className="text-base ">Gaming Streams to Shorts Format <Badge>Coming Soon</Badge></span>
+                </li>
+                <li className="flex space-x-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0 h-5 w-5 text-green-400" width="24"
+                    height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none"
+                    strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                    <path d="M5 12l5 5l10 -10"></path>
+                  </svg>
+                  <span className="text-base">AI generated Captions <Badge>Coming Soon</Badge></span>
+                </li>
+                <li className="flex space-x-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0 h-5 w-5 text-green-400" width="24"
+                    height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none"
+                    strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                    <path d="M5 12l5 5l10 -10"></path>
+                  </svg>
+                  <span className="text-base ">60 min / stream</span>
+                </li>
+                <li className="flex space-x-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0 h-5 w-5 text-green-400" width="24"
+                    height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none"
+                    strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                    <path d="M5 12l5 5l10 -10"></path>
+                  </svg>
+                  <span className="text-base ">10 Requests</span>
+                </li>
+              </ul>
+            </div>
           </div>
-          <div className="pt-6 pb-8 px-6">
-            <h3 className="text-sm font-bold  tracking-wide uppercase">{`What's included`}</h3>
-            <ul role="list" className="mt-4 space-y-3">
-              <li className="flex space-x-3">
-                <svg xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0 h-5 w-5 text-green-400" width="24"
-                  height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none"
-                  strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                  <path d="M5 12l5 5l10 -10"></path>
-                </svg>
-                <span className="text-base ">AI Stream Analyzer</span>
-              </li>
-              <li className="flex space-x-3">
-                <svg xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0 h-5 w-5 text-green-400" width="24"
-                  height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none"
-                  strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                  <path d="M5 12l5 5l10 -10"></path>
-                </svg>
-                <span className="text-base ">Gaming Streams to Shorts Format <Badge>Coming Soon</Badge></span>
-              </li>
-              <li className="flex space-x-3">
-                <svg xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0 h-5 w-5 text-green-400" width="24"
-                  height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none"
-                  strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                  <path d="M5 12l5 5l10 -10"></path>
-                </svg>
-                <span className="text-base">AI generated Captions <Badge>Coming Soon</Badge></span>
-              </li>
-              <li className="flex space-x-3">
-                <svg xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0 h-5 w-5 text-green-400" width="24"
-                  height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none"
-                  strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                  <path d="M5 12l5 5l10 -10"></path>
-                </svg>
-                <span className="text-base ">60 min / stream</span>
-              </li>
-              <li className="flex space-x-3">
-                <svg xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0 h-5 w-5 text-green-400" width="24"
-                  height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none"
-                  strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                  <path d="M5 12l5 5l10 -10"></path>
-                </svg>
-                <span className="text-base ">Unlimited Streams / day</span>
-              </li>
-            </ul>
+        </div>
+        <br />
+        <div className="flex justify-center">
+          <div className="border border-primary_pink rounded-lg shadow-sm divide-y divide-primary_pink">
+            <div className="p-6">
+              <h2 className="text-xl leading-6 font-bold ">Streamer Mode</h2>
+              <p className="mt-2 text-base text-muted-foreground leading-tight">For streamers who want to attract viewers from engaging live moments.</p>
+              <p className="mt-2 text-base text-muted-foreground leading-tight">Create Content 10x Faster.</p>
+              <p className="mt-8">
+                <span className="text-4xl font-bold line-through decoration-primary_pink tracking-tighter">$20</span>
+                <span className="text-4xl font-bold tracking-tighter ml-3">$10</span>
+                <span className="text-base font-medium">/mo</span>
+              </p>
+              <Button
+                variant="default"
+                className="mt-8 block w-full bg-primary rounded-md py-2 text-sm font-semibold text-secondary text-center"
+                onClick={() => handleCheckout()}
+              >Purchase</Button>
+            </div>
+            <div className="pt-6 pb-8 px-6">
+              <h3 className="text-sm font-bold  tracking-wide uppercase">{`What's included`}</h3>
+              <ul role="list" className="mt-4 space-y-3">
+                <li className="flex space-x-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0 h-5 w-5 text-green-400" width="24"
+                    height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none"
+                    strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                    <path d="M5 12l5 5l10 -10"></path>
+                  </svg>
+                  <span className="text-base ">AI Stream Analyzer</span>
+                </li>
+                <li className="flex space-x-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0 h-5 w-5 text-green-400" width="24"
+                    height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none"
+                    strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                    <path d="M5 12l5 5l10 -10"></path>
+                  </svg>
+                  <span className="text-base ">Gaming Streams to Shorts Format <Badge>Coming Soon</Badge></span>
+                </li>
+                <li className="flex space-x-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0 h-5 w-5 text-green-400" width="24"
+                    height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none"
+                    strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                    <path d="M5 12l5 5l10 -10"></path>
+                  </svg>
+                  <span className="text-base">AI generated Captions <Badge>Coming Soon</Badge></span>
+                </li>
+                <li className="flex space-x-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0 h-5 w-5 text-green-400" width="24"
+                    height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none"
+                    strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                    <path d="M5 12l5 5l10 -10"></path>
+                  </svg>
+                  <span className="text-base ">60 min / stream</span>
+                </li>
+                <li className="flex space-x-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0 h-5 w-5 text-green-400" width="24"
+                    height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none"
+                    strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                    <path d="M5 12l5 5l10 -10"></path>
+                  </svg>
+                  <span className="text-base ">Unlimited Streams / day</span>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>

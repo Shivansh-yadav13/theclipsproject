@@ -43,14 +43,14 @@ export default function ClipCard({ time_stamp, f_score, twitch_url }: { time_sta
       <div className="aspect-video mb-5">
         <iframe
           className="mx-auto overflow-hidden 2xl:block hidden"
-          src="https://player.twitch.tv/?video=1922395449&parent="
+          src="https://player.twitch.tv/?video=1922395449&parent=fusionclips.pro"
           height="400"
           width="600"
           allowFullScreen={false}
         ></iframe>
         <iframe
           className="mx-auto overflow-hidden 2xl:hidden"
-          src="https://player.twitch.tv/?video=1922395449&parent="
+          src="https://player.twitch.tv/?video=1922395449&parent=fusionclips.pro"
           width="300"
           height="169"
           allowFullScreen={false}
