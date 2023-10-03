@@ -242,6 +242,7 @@ export interface Database {
           request_status: boolean
           server_busy_status: boolean
           total_requests: number
+          trial_requests: number
         }
         Insert: {
           avatar_url?: string | null
@@ -253,6 +254,7 @@ export interface Database {
           request_status?: boolean
           server_busy_status?: boolean
           total_requests?: number
+          trial_requests?: number
         }
         Update: {
           avatar_url?: string | null
@@ -264,6 +266,7 @@ export interface Database {
           request_status?: boolean
           server_busy_status?: boolean
           total_requests?: number
+          trial_requests?: number
         }
         Relationships: [
           {

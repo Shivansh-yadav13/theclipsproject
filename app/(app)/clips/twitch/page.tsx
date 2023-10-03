@@ -48,6 +48,14 @@ const storeTwitchUrl = async (url: string) => {
   }
 }
 
+const reduceTrialRequests = async () => {
+  try {
+    await axios.get('/api/supabase/reduce-trial-requests')
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 
 export default function TwitchClips() {
   const [url, setUrl] = useState<string>("");
@@ -69,19 +77,19 @@ export default function TwitchClips() {
     async function wait(ms: number) {
       return new Promise((resolve) => setTimeout(resolve, ms));
     }
-  
+
     let clipsData, user_busy_status;
-  
+
     do {
       clipsData = await axios.get(`/api/fusionclipsai/twitch`);
       user_busy_status = clipsData.data.status;
-  
+
       if (user_busy_status) {
         console.log("Waiting for the process to complete...");
         await wait(20000);
       }
     } while (user_busy_status);
-  
+
     return clipsData;
   };
 
@@ -132,45 +140,71 @@ export default function TwitchClips() {
     await setRequestStatus(false);
   }
 
-  const handleURLSubmit = async () => {
-    setBtnLoading(true);
+  const validateUser = async () => {
     const userResponse = await supabase.auth.getUser();
     if (userResponse.error) {
       console.log(userResponse.error)
-      router.push("/account")
+      return false;
     }
+
     if (userResponse.data.user) {
       const userID = userResponse.data.user.id;
       const { data, error } = await supabase
         .from('subscriptions')
         .select()
         .eq('user_id', userID)
+
       if (error) {
         console.log(error)
-        router.push("/account")
+        return false;
       }
-      console.log(data);
+
       if (data?.length == 0) {
-        router.push("/pricing")
+        const userData = await supabase
+          .from('users')
+          .select()
+          .eq('id', userID)
+
+        if (userData.error) {
+          return false;
+        }
+
+        if (userData.data) {
+          const trial_req = userData.data[0].trial_requests
+          await reduceTrialRequests()
+          if (trial_req > 0) {
+            return true;
+          }
+        }
+        return false;
       } else {
-        const urlPattern1 = /^(https?:\/\/)?(www\.)?twitch\.tv\/videos\/\d+$/;
-        const urlPattern2 = /^(https?:\/\/)?(www\.)?twitch\.tv\/[a-zA-Z0-9_]+\/video\/\d+$/;
-        var inputUrl = url
-        if (!inputUrl.startsWith("https://")) {
-          inputUrl = "https://" + inputUrl
-        }
-        setTwitchUrl(inputUrl);
-        setUrl("");
-        if (urlPattern1.test(inputUrl) || urlPattern2.test(inputUrl)) {
-          setUrlBanner(false);
-          tempUrlSubmit(inputUrl);
-        } else {
-          setUrlBanner(true);
-          setBtnLoading(false);
-        }
+        return true;
+      }
+    }
+    return false;
+  }
+
+  const handleURLSubmit = async () => {
+    setBtnLoading(true);
+    const allow = await validateUser();
+    if (allow) {
+      const urlPattern1 = /^(https?:\/\/)?(www\.)?twitch\.tv\/videos\/\d+$/;
+      const urlPattern2 = /^(https?:\/\/)?(www\.)?twitch\.tv\/[a-zA-Z0-9_]+\/video\/\d+$/;
+      var inputUrl = url
+      if (!inputUrl.startsWith("https://")) {
+        inputUrl = "https://" + inputUrl
+      }
+      setTwitchUrl(inputUrl);
+      setUrl("");
+      if (urlPattern1.test(inputUrl) || urlPattern2.test(inputUrl)) {
+        setUrlBanner(false);
+        tempUrlSubmit(inputUrl);
+      } else {
+        setUrlBanner(true);
+        setBtnLoading(false);
       }
     } else {
-      router.push("/account")
+      router.push("/pricing")
     }
   }
 
