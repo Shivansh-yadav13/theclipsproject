@@ -35,7 +35,7 @@ export default function Navbar() {
               <h1 className='text-xl font-extrabold'>Fusion Clips AI</h1>
             </Link>
           </h1>
-          <Image width="30" height="30" className='cursor-pointer' src="/hamburger.png" alt="menu--v1" onClick={() => setMenu(!menu)} />
+          <Image width="30" height="30" className='cursor-pointer' src="/hamburger_white.png" alt="menu--v1" onClick={() => setMenu(!menu)} />
         </div>
         <div className={`absolute z-10 w-full border-x-2 border-b-2 rounded-b-xl backdrop-blur-md p-2 left-0 -top-60 ${menu ? "translate-y-80" : ""} transition-all duration-300`}>
           <ul className='mx-5 font-semibold text-sm flex flex-col gap-2'>

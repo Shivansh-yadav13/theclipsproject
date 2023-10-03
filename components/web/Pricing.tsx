@@ -82,7 +82,7 @@ export default function Pricing({
             billing
           </button>
           <button type="button"
-            className="ml-0.5 relative w-1/2 border rounded-md py-2 text-sm font-medium whitespace-nowrap focus:outline-none sm:w-auto sm:px-8 border-transparent ">Yearly
+            className="hover:cursor-not-allowed ml-0.5 relative w-1/2 border rounded-md py-2 text-sm font-medium whitespace-nowrap focus:outline-none sm:w-auto sm:px-8 border-transparent ">Yearly
             billing
           </button>
         </div>
@@ -140,7 +140,7 @@ export default function Pricing({
                   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                   <path d="M5 12l5 5l10 -10"></path>
                 </svg>
-                <span className="text-base ">180 min / stream</span>
+                <span className="text-base ">60 min / stream</span>
               </li>
               <li className="flex space-x-3">
                 <svg xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0 h-5 w-5 text-green-400" width="24"
@@ -149,7 +149,7 @@ export default function Pricing({
                   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                   <path d="M5 12l5 5l10 -10"></path>
                 </svg>
-                <span className="text-base ">5 Requests / day</span>
+                <span className="text-base ">Unlimited Streams / day</span>
               </li>
             </ul>
           </div>

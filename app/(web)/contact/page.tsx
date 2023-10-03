@@ -35,8 +35,8 @@ export default function ContactPage() {
     <div className="w-screen text-muted-foreground">
       <div className="lg:border lg:w-2/5 mx-auto my-20 p-10 rounded-xl">
         <h1 className="text-3xl font-bold text-primary text-center">Contact Us</h1>
-        <p className="text-center my-2">Got any query? fill the below form or just send an email @<span className="text-base text-primary bg-black font-mono px-1">shivansh@fusionclips.lol</span></p>
-        <form className="my-5">
+        <p className="text-center my-2">Got any query? just send an email @<span className="text-base text-primary bg-black font-mono px-1">shivansh@fusionclips.lol</span></p>
+        {/* <form className="my-5">
           <div className="relative z-0 w-full mb-6 group">
             <input
               type="email"
@@ -82,7 +82,7 @@ export default function ContactPage() {
             className="focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">
             Submit
           </Button>
-        </form>
+        </form> */}
       </div>
     </div>
   )
