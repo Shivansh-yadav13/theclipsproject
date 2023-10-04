@@ -1,6 +1,7 @@
 import SupabaseProvider from "@/app/supabase/supabase-provider";
 import './globals.css'
 import type { Metadata } from 'next'
+import { Analytics } from "@vercel/analytics/react";
 
 export const metadata: Metadata = {
   title: 'FusionClips AI',
@@ -19,6 +20,7 @@ export default function RootLayout({
           <div className='flex flex-col h-screen justify-between'>
             <div className='h-screen w-screen'>
               {children}
+              <Analytics />
             </div>
           </div>
         </SupabaseProvider>
