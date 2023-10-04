@@ -117,6 +117,19 @@ const getLastTwitchUrl = async (supabase: any) => {
   }
 }
 
+const getServerBusyStatus = async (supabase: any) => {
+  try {
+    const user = await getUserData(supabase);
+    const { data, error } = await supabase
+      .from('users')
+      .select('server_busy_status')
+      .eq('id', user.id)
+    return data[0].server_busy_status
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 export default function TwitchClips() {
   const [url, setUrl] = useState<string>("");
   const [twitchUrl, setTwitchUrl] = useState<string>("");
@@ -156,41 +169,32 @@ export default function TwitchClips() {
     return clipsData;
   };
 
-  const tempUrlSubmit = async (url: string) => {
+  const twitchUrlSubmit = async (url: string) => {
     setErrorMessage(false);
     setMessage(false);
     setLoading(true);
     try {
-      const status = await getRequestStatus()
-      if (!status) {
-        await setRequestStatus(true);
-        storeTwitchUrl(url);
-        await reduceTrialRequests()
-        increaseTotalRequests();
-        const timestamps = {
-          hour: tshour,
-          min: tsmin,
-          sec: tssec
-        }
-        setTshour(0);
-        setTsmin(0);
-        setTssec(0);
-        const result = await axios.post(`/api/fusionclipsai/twitch`, { url, timestamps });
-        const clipsData = await getClipsData();
-        const finalClips = clipsData.data.data;
-        console.log(finalClips, clipsData.data)
-        if (finalClips.length == 0) {
-          setMessage(true);
-          setLoading(false);
-          setBtnLoading(false);
-        } else {
-          setClipsData(finalClips);
-          setLoading(false);
-          setBtnLoading(false);
-        }
-        await setRequestStatus(false)
+      storeTwitchUrl(url);
+      await reduceTrialRequests()
+      increaseTotalRequests();
+      const timestamps = {
+        hour: tshour,
+        min: tsmin,
+        sec: tssec
+      }
+      setTshour(0);
+      setTsmin(0);
+      setTssec(0);
+      await axios.post(`/api/fusionclipsai/twitch`, { url, timestamps });
+      const clipsData = await getClipsData();
+      const finalClips = clipsData.data.data;
+      if (finalClips.length == 0) {
+        setMessage(true);
+        setLoading(false);
+        setBtnLoading(false);
       } else {
-        setRequestMessage(true);
+        setClipsData(finalClips);
+        setLoading(false);
         setBtnLoading(false);
       }
     }
@@ -199,9 +203,7 @@ export default function TwitchClips() {
       setLoading(false);
       setBtnLoading(false);
       setErrorMessage(true);
-      await setRequestStatus(false);
     }
-    await setRequestStatus(false);
     getSubscription()
     getUser()
   }
@@ -237,7 +239,7 @@ export default function TwitchClips() {
         setUrl("");
         if (urlPattern1.test(inputUrl) || urlPattern2.test(inputUrl)) {
           setUrlBanner(false);
-          tempUrlSubmit(inputUrl);
+          twitchUrlSubmit(inputUrl);
         } else {
           setUrlBanner(true);
           setBtnLoading(false);
@@ -261,9 +263,25 @@ export default function TwitchClips() {
     setUserSubscription(userSub)
   }
 
+  const checkUserRequests = async () => {
+    const userServerBusy = await getServerBusyStatus(supabase);
+    if (userServerBusy) {
+      setLoading(true)
+      setRequestMessage(true)
+      setBtnLoading(true)
+      const clipsData = await getClipsData()
+      const finalClips = clipsData.data.data;
+      setClipsData(finalClips)
+      setLoading(false)
+      setRequestMessage(false)
+      setBtnLoading(false)
+    }
+  }
+
   useEffect(() => {
     getUser()
     getSubscription()
+    checkUserRequests()
   }, [])
 
   return (
