@@ -1,15 +1,14 @@
-import Link from "next/link";
 import { Button } from "../ui/button";
 import { Progress } from "@/components/ui/progress"
 import axios from "axios";
 import { useState } from "react";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
-import Image from "next/image";
 
 
 export default function ClipCard({ time_stamp, f_score, twitch_url }: { time_stamp: number, f_score: number, twitch_url: string }) {
   const [downloading, setDownloading] = useState<boolean>(false);
   const [progress, setProgress] = useState<number>(0);
+  const twitchVODId = twitch_url.replace("https://www.twitch.tv/videos/", "")
   const handleDownload = async () => {
     try {
       setDownloading(true);
@@ -43,7 +42,7 @@ export default function ClipCard({ time_stamp, f_score, twitch_url }: { time_sta
       <div className="aspect-video mb-5">
         <iframe
           className="mx-auto overflow-hidden 2xl:block hidden"
-          src="https://player.twitch.tv/?video=1922395449&parent=fusionclips.pro"
+          src={`https://player.twitch.tv/?video=${twitchVODId}&parent=fusionclips.pro`}
           height="400"
           width="600"
           allowFullScreen={false}

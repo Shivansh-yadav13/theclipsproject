@@ -233,9 +233,9 @@ export default function TwitchClips() {
         inputUrl = "https://" + inputUrl
       }
       const lastTwitchUrl = await getLastTwitchUrl(supabase)
+      setTwitchUrl(inputUrl);
       if (lastTwitchUrl !== inputUrl) {
         await saveLastTwitchUrl(supabase, inputUrl);
-        setTwitchUrl(inputUrl);
         setUrl("");
         if (urlPattern1.test(inputUrl) || urlPattern2.test(inputUrl)) {
           setUrlBanner(false);
