@@ -238,6 +238,7 @@ export interface Database {
           full_name: string | null
           id: string
           last_request_data: Json[] | null
+          last_twitch_url: string | null
           payment_method: Json | null
           request_status: boolean
           server_busy_status: boolean
@@ -250,6 +251,7 @@ export interface Database {
           full_name?: string | null
           id: string
           last_request_data?: Json[] | null
+          last_twitch_url?: string | null
           payment_method?: Json | null
           request_status?: boolean
           server_busy_status?: boolean
@@ -262,6 +264,7 @@ export interface Database {
           full_name?: string | null
           id?: string
           last_request_data?: Json[] | null
+          last_twitch_url?: string | null
           payment_method?: Json | null
           request_status?: boolean
           server_busy_status?: boolean
@@ -295,7 +298,6 @@ export interface Database {
         | "incomplete_expired"
         | "past_due"
         | "unpaid"
-        | "paused"
     }
     CompositeTypes: {
       [_ in never]: never

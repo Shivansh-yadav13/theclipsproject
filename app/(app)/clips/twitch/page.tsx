@@ -16,7 +16,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion_custom"
 import { useRouter } from "next/navigation";
-import { Subscription, User, UserMetadata } from "@supabase/supabase-js";
+import { Subscription } from "@supabase/supabase-js";
 
 const increaseTotalRequests = async () => {
   try {
@@ -92,6 +92,30 @@ const getUserSubscription = async (supabase: any) => {
   }
 }
 
+const saveLastTwitchUrl = async (supabase: any, twitch_url: string) => {
+  try {
+    const user = await getUserData(supabase);
+    await supabase
+      .from('users')
+      .update({ last_twitch_url: twitch_url })
+      .eq('id', user.id)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+const getLastTwitchUrl = async (supabase: any) => {
+  try {
+    const user = await getUserData(supabase)
+    const { data, error } = await supabase
+      .from('users')
+      .select('last_twitch_url')
+      .eq('id', user.id)
+    return data[0].last_twitch_url
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 export default function TwitchClips() {
   const [url, setUrl] = useState<string>("");
@@ -199,7 +223,6 @@ export default function TwitchClips() {
   const handleURLSubmit = async () => {
     setBtnLoading(true);
     const allow = await validateUser();
-    console.log(allow)
     if (allow) {
       const urlPattern1 = /^(https?:\/\/)?(www\.)?twitch\.tv\/videos\/\d+$/;
       const urlPattern2 = /^(https?:\/\/)?(www\.)?twitch\.tv\/[a-zA-Z0-9_]+\/video\/\d+$/;
@@ -207,15 +230,22 @@ export default function TwitchClips() {
       if (!inputUrl.startsWith("https://")) {
         inputUrl = "https://" + inputUrl
       }
-      setTwitchUrl(inputUrl);
-      setUrl("");
-      if (urlPattern1.test(inputUrl) || urlPattern2.test(inputUrl)) {
-        setUrlBanner(false);
-        tempUrlSubmit(inputUrl);
-      } else {
-        setUrlBanner(true);
-        setBtnLoading(false);
+      const lastTwitchUrl = await getLastTwitchUrl(supabase)
+      if (lastTwitchUrl !== inputUrl) {
+        await saveLastTwitchUrl(supabase, inputUrl);
+        setTwitchUrl(inputUrl);
+        setUrl("");
+        if (urlPattern1.test(inputUrl) || urlPattern2.test(inputUrl)) {
+          setUrlBanner(false);
+          tempUrlSubmit(inputUrl);
+        } else {
+          setUrlBanner(true);
+          setBtnLoading(false);
+        }
       }
+      const finalClips = userdata.last_request_data
+      setClipsData(finalClips);
+      setBtnLoading(false);
     } else {
       router.push("/pricing")
     }

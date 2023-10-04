@@ -44,6 +44,8 @@ export default function ClipsBox({
                     }
                   </div>
                   <div className="mt-20 text-base">
+                    <h2 className="text-muted-foreground font-bold uppercase text-xl">No Clips</h2>
+                    <p className="text-xs text-muted-foreground">Found less engagement</p>
                     <h3 className="text-xl">{`Don't find your clip here?`}</h3>
                     <p>Please Help us Improve the Performace of FusionClips AI</p>
                     <Link href="/report-missing-clip">
@@ -73,8 +75,8 @@ export default function ClipsBox({
                               </div>
                               :
                               <div>
-                                <h3 className="text-gray-400 font-semibold text-xl">No Clips to Display</h3>
-                                <p className="text-gray-400">Your scraped clips will appear here</p>
+                                <h3 className="text-muted-foreground font-semibold text-xl">No Clips to Display</h3>
+                                <p className="text-muted-foreground">Your scraped clips will appear here</p>
                               </div>
                           }
                         </div>
