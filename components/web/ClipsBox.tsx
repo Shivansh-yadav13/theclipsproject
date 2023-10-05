@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "../ui/badge";
 import ClipCard from "./ClipCard";
+import { Button } from "../ui/button";
 
 export default function ClipsBox({
   loading,
@@ -32,6 +33,7 @@ export default function ClipsBox({
             {
               clipsData ?
                 <>
+                  {/* <div className="grid lg:grid-cols-2 gap-4 mx-auto mt-10"> */}
                   <div className="grid lg:grid-cols-2 gap-4 mx-auto mt-10">
                     {
                       clipsData.map((c: any, k) => (
@@ -44,8 +46,6 @@ export default function ClipsBox({
                     }
                   </div>
                   <div className="mt-20 text-base">
-                    <h2 className="text-muted-foreground font-bold uppercase text-xl">No Clips</h2>
-                    <p className="text-xs text-muted-foreground">Found less engagement</p>
                     <h3 className="text-xl">{`Don't find your clip here?`}</h3>
                     <p>Please Help us Improve the Performace of FusionClips AI</p>
                     <Link href="/report-missing-clip">

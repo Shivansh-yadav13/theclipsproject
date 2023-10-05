@@ -17,7 +17,7 @@ export async function POST(request: Request) {
     formData.append('twitch_url', url);
     formData.append('start_timestamps', JSON.stringify(timestamps))
     formData.append('user_id', userId)
-    const result = await axios.post(`http://157.230.236.14:5000/analyze_twitch_audio`, formData);
+    const result = await axios.post(`https://fusionclipsai.up.railway.app/analyze_twitch_audio`, formData);
     console.log(result.data)
     return new Response(JSON.stringify({ result : true }));
   } catch (error) {

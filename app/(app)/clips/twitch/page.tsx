@@ -232,6 +232,7 @@ export default function TwitchClips() {
       if (!inputUrl.startsWith("https://")) {
         inputUrl = "https://" + inputUrl
       }
+      inputUrl = inputUrl.replace("?filter=archives&sort=time", "");
       const lastTwitchUrl = await getLastTwitchUrl(supabase)
       setTwitchUrl(inputUrl);
       if (lastTwitchUrl !== inputUrl) {
@@ -244,10 +245,11 @@ export default function TwitchClips() {
           setUrlBanner(true);
           setBtnLoading(false);
         }
+      } else {
+        const finalClips = userdata.last_request_data
+        setClipsData(finalClips);
+        setBtnLoading(false);
       }
-      const finalClips = userdata.last_request_data
-      setClipsData(finalClips);
-      setBtnLoading(false);
     } else {
       router.push("/pricing")
     }
