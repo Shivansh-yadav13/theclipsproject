@@ -235,12 +235,11 @@ export interface Database {
         Row: {
           avatar_url: string | null
           billing_address: Json | null
+          created_at: string
           full_name: string | null
           id: string
-          last_request_data: Json[] | null
-          last_twitch_url: string | null
+          last_request_data: Json | null
           payment_method: Json | null
-          request_status: boolean
           server_busy_status: boolean
           total_requests: number
           trial_requests: number
@@ -248,12 +247,11 @@ export interface Database {
         Insert: {
           avatar_url?: string | null
           billing_address?: Json | null
+          created_at?: string
           full_name?: string | null
           id: string
-          last_request_data?: Json[] | null
-          last_twitch_url?: string | null
+          last_request_data?: Json | null
           payment_method?: Json | null
-          request_status?: boolean
           server_busy_status?: boolean
           total_requests?: number
           trial_requests?: number
@@ -261,12 +259,11 @@ export interface Database {
         Update: {
           avatar_url?: string | null
           billing_address?: Json | null
+          created_at?: string
           full_name?: string | null
           id?: string
-          last_request_data?: Json[] | null
-          last_twitch_url?: string | null
+          last_request_data?: Json | null
           payment_method?: Json | null
-          request_status?: boolean
           server_busy_status?: boolean
           total_requests?: number
           trial_requests?: number

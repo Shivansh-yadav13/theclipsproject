@@ -1,6 +1,6 @@
 import { createServerSupabaseClient } from "../../../supabase/supabase-server";
 
-export const dynamic = "force-dynamic"
+// export const dynamic = "force-dynamic"
 
 export async function POST(request: Request) {
   if (request.method !== "POST") {

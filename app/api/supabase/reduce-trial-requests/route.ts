@@ -1,7 +1,5 @@
 import { createServerSupabaseClient } from "../../../supabase/supabase-server";
 
-export const dynamic = "force-dynamic"
-
 export async function GET(request: Request) {
   if (request.method !== "GET") {
     return new Response("Method Not Allowed")

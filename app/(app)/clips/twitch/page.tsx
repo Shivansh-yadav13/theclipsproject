@@ -26,15 +26,6 @@ const increaseTotalRequests = async () => {
   }
 }
 
-const getRequestStatus = async () => {
-  const res = await axios.get('/api/supabase/check-status');
-  return res.data.result
-}
-
-const setRequestStatus = async (statusValue: boolean) => {
-  const some = await axios.post('/api/supabase/check-status', { updateData: statusValue })
-}
-
 const storeTwitchUrl = async (url: string) => {
   try {
     const formData = new FormData();
@@ -92,30 +83,22 @@ const getUserSubscription = async (supabase: any) => {
   }
 }
 
-const saveLastTwitchUrl = async (supabase: any, twitch_url: string) => {
-  try {
-    const user = await getUserData(supabase);
-    await supabase
-      .from('users')
-      .update({ last_twitch_url: twitch_url })
-      .eq('id', user.id)
-  } catch (error) {
-    console.log(error)
-  }
-}
 
-const getLastTwitchUrl = async (supabase: any) => {
+const getLastRequestData = async (supabase: any) => {
   try {
     const user = await getUserData(supabase)
     const { data, error } = await supabase
-      .from('users')
-      .select('last_twitch_url')
+      .from("users")
+      .select('last_request_data')
       .eq('id', user.id)
-    return data[0].last_twitch_url
+    console.log(data[0].last_request_data)
+    return data[0].last_request_data;
   } catch (error) {
     console.log(error)
+    return null
   }
 }
+
 
 const getServerBusyStatus = async (supabase: any) => {
   try {
@@ -169,7 +152,7 @@ export default function TwitchClips() {
     return clipsData;
   };
 
-  const twitchUrlSubmit = async (url: string) => {
+  const twitchUrlSubmit = async (url: string, timestamps: object) => {
     setErrorMessage(false);
     setMessage(false);
     setLoading(true);
@@ -177,14 +160,6 @@ export default function TwitchClips() {
       storeTwitchUrl(url);
       await reduceTrialRequests()
       increaseTotalRequests();
-      const timestamps = {
-        hour: tshour,
-        min: tsmin,
-        sec: tssec
-      }
-      setTshour(0);
-      setTsmin(0);
-      setTssec(0);
       await axios.post(`/api/fusionclipsai/twitch`, { url, timestamps });
       const clipsData = await getClipsData();
       const finalClips = clipsData.data.data;
@@ -226,29 +201,38 @@ export default function TwitchClips() {
     setBtnLoading(true);
     const allow = await validateUser();
     if (allow) {
-      const urlPattern1 = /^(https?:\/\/)?(www\.)?twitch\.tv\/videos\/\d+$/;
-      const urlPattern2 = /^(https?:\/\/)?(www\.)?twitch\.tv\/[a-zA-Z0-9_]+\/video\/\d+$/;
       var inputUrl = url
       if (!inputUrl.startsWith("https://")) {
         inputUrl = "https://" + inputUrl
       }
       inputUrl = inputUrl.replace("?filter=archives&sort=time", "");
-      const lastTwitchUrl = await getLastTwitchUrl(supabase)
       setTwitchUrl(inputUrl);
-      if (lastTwitchUrl !== inputUrl) {
-        await saveLastTwitchUrl(supabase, inputUrl);
+      const timestamps = {
+        hour: tshour,
+        min: tsmin,
+        sec: tssec
+      }
+      const lastRequestData = await getLastRequestData(supabase)
+      if (lastRequestData !== null && lastRequestData.twitch_url == inputUrl && lastRequestData.timestamps == timestamps) {
+        const finalClips = lastRequestData.last_clips
+        setClipsData(finalClips);
+        setBtnLoading(false);
+      } else {
+        const twitch_url = inputUrl
+        await axios.post(`/api/supabase/update-last-request-data`, { twitch_url, timestamps });
+        setTshour(0);
+        setTsmin(0);
+        setTssec(0);
         setUrl("");
+        const urlPattern1 = /^(https?:\/\/)?(www\.)?twitch\.tv\/videos\/\d+$/;
+        const urlPattern2 = /^(https?:\/\/)?(www\.)?twitch\.tv\/[a-zA-Z0-9_]+\/video\/\d+$/;
         if (urlPattern1.test(inputUrl) || urlPattern2.test(inputUrl)) {
           setUrlBanner(false);
-          twitchUrlSubmit(inputUrl);
+          twitchUrlSubmit(inputUrl, timestamps);
         } else {
           setUrlBanner(true);
           setBtnLoading(false);
         }
-      } else {
-        const finalClips = userdata.last_request_data
-        setClipsData(finalClips);
-        setBtnLoading(false);
       }
     } else {
       router.push("/pricing")

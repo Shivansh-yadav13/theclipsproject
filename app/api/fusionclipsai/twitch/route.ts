@@ -18,7 +18,6 @@ export async function POST(request: Request) {
     formData.append('start_timestamps', JSON.stringify(timestamps))
     formData.append('user_id', userId)
     const result = await axios.post(`https://fusionclipsai.up.railway.app/analyze_twitch_audio`, formData);
-    console.log(result.data)
     return new Response(JSON.stringify({ result : true }));
   } catch (error) {
     console.log(error)
@@ -40,7 +39,8 @@ export async function GET(request: Request) {
   const server_busy_status = data![0].server_busy_status
   if (!server_busy_status) {
     if (data) {
-      const clips = data[0].last_request_data
+      const lastReqData: any = data[0].last_request_data
+      const clips = lastReqData.last_clips
       return new Response(JSON.stringify({"data": clips, "status": server_busy_status}))
     } else {
       return new Response(JSON.stringify({"data": null, "status": null}))
