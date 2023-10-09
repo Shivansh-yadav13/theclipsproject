@@ -1,31 +1,7 @@
 import { Button } from "../ui/button";
-import { Progress } from "@/components/ui/progress"
 import axios from "axios";
 import { useState } from "react";
-import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import Image from "next/image";
-
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-
 
 export default function ClipCard({ time_stamp, f_score, twitch_url }: { time_stamp: number, f_score: number, twitch_url: string }) {
   const [downloading, setDownloading] = useState<boolean>(false);

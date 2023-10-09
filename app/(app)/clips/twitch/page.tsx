@@ -145,7 +145,7 @@ export default function TwitchClips() {
 
       if (user_busy_status) {
         console.log("Waiting for the process to complete...");
-        await wait(20000);
+        await wait(35000);
       }
     } while (user_busy_status);
 
@@ -159,7 +159,7 @@ export default function TwitchClips() {
     try {
       storeTwitchUrl(url);
       await reduceTrialRequests()
-      increaseTotalRequests();
+      await increaseTotalRequests();
       await axios.post(`/api/fusionclipsai/twitch`, { url, timestamps });
       const clipsData = await getClipsData();
       const finalClips = clipsData.data.data;
@@ -217,6 +217,7 @@ export default function TwitchClips() {
         const finalClips = lastRequestData.last_clips
         setClipsData(finalClips);
         setBtnLoading(false);
+        await increaseTotalRequests()
       } else {
         const twitch_url = inputUrl
         await axios.post(`/api/supabase/update-last-request-data`, { twitch_url, timestamps });
