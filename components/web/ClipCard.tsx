@@ -2,11 +2,13 @@ import { Button } from "../ui/button";
 import axios from "axios";
 import { useState } from "react";
 import Image from "next/image";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
+import { Progress } from "../ui/progress";
 
 export default function ClipCard({ time_stamp, f_score, twitch_url }: { time_stamp: number, f_score: number, twitch_url: string }) {
   const [downloading, setDownloading] = useState<boolean>(false);
   const [clipModal, setClipModal] = useState<boolean>(false);
-  const [progress, setProgress] = useState<number>(0);
+  const [progress, setProgress] = useState<number>(90);
   const twitchVODId = twitch_url.replace("https://www.twitch.tv/videos/", "")
   const handleDownload = async () => {
     try {
@@ -19,13 +21,14 @@ export default function ClipCard({ time_stamp, f_score, twitch_url }: { time_sta
       const response = await axios.post("https://fusionclipsai.up.railway.app/download_clip", formData);
       const video_data = response.data;
       setProgress(70);
-      const videoBlob = new Blob([Buffer.from(video_data, 'base64')], { type: 'video/mp4' });
+      const videoBlob = new Blob([Buffer.from(video_data, 'base64')], { type: 'video/flv' });
+      // const videoBlob = new Blob([response.data], { type: 'video/mp4' });
 
       const videoUrl = URL.createObjectURL(videoBlob);
 
       const link = document.createElement('a');
       link.href = videoUrl;
-      link.download = `fusion-clips-${twitch_url.replace("https://www.twitch.tv/videos/", "")}-${seconds}.mp4`;
+      link.download = `fusion-clips-${twitch_url.replace("https://www.twitch.tv/videos/", "")}-${seconds}.flv`;
       link.click();
 
       URL.revokeObjectURL(videoUrl);
@@ -53,7 +56,7 @@ export default function ClipCard({ time_stamp, f_score, twitch_url }: { time_sta
                     allowFullScreen={false}
                   ></iframe>
                   <div className="bg-primary-foreground rounded-xl px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                    <Button type="button" onClick={handleDownload} disabled={downloading} className="inline-flex w-full justify-center px-3 py-2 text-sm font-semibold  sm:ml-3 sm:w-auto">Download Clip</Button>
+                    <Button type="button" onClick={handleDownload} disabled={downloading} className="inline-flex w-full justify-center px-3 py-2 text-sm font-semibold  sm:ml-3 sm:w-auto">{ downloading ? 'Downloading...' : 'Download Clip'}</Button>
                     <Button type="button" onClick={() => setClipModal(false)} className="mt-3 inline-flex w-full justify-center px-3 py-2 text-sm font-semibold ring-1 ring-inset sm:mt-0 sm:w-auto">Close</Button>
                   </div>
                 </div>
@@ -79,6 +82,18 @@ export default function ClipCard({ time_stamp, f_score, twitch_url }: { time_sta
           {/* <Image src="/download_icon.png" width={30} height={40} alt="Download clip" /> */}
         </Button>
       </div>
+      {/* {
+        downloading ?
+          <Alert className="w-fit flex flex-col gap-3 fixed bottom-0 lg:right-0 right-2 m-20 bg-primary-foreground" >
+            <AlertTitle className="text-start">Downloading Clip...</AlertTitle>
+            <AlertDescription>
+              <p className="mb-2 text-base">{twitch_url + `?t=${time_stamp}s`}</p>
+              <Progress value={progress} className="w-full" />
+            </AlertDescription>
+          </Alert>
+          :
+          ""
+      } */}
     </div>
     // <div className="bg-primary-foreground border-primary_blue border-2 w-fit mx-auto rounded-lg p-10 text-start text-xl my-10">
     //   <div className="aspect-video mb-5">
@@ -109,18 +124,6 @@ export default function ClipCard({ time_stamp, f_score, twitch_url }: { time_sta
     //       <Button onClick={handleDownload} disabled={downloading}>Download Clip</Button>
     //     </div>
     //   </div>
-    //   {
-    //     downloading ?
-    //       <Alert className="w-fit flex flex-col gap-3 fixed bottom-0 lg:right-0 right-2 m-20 bg-primary-foreground" >
-    //         <AlertTitle>Downloading Clip...</AlertTitle>
-    //         <AlertDescription>
-    //           <p className="mb-2 text-base">{twitch_url + `?t=${time_stamp}s`}</p>
-    //           <Progress value={progress} className="w-full" />
-    //         </AlertDescription>
-    //       </Alert>
-    //       :
-    //       ""
-    //   }
     // </div>
   )
 }
