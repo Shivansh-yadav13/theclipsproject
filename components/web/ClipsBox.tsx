@@ -79,7 +79,7 @@ export default function ClipsBox({
                               <div>
                                 <h3 className="text-muted-foreground font-semibold text-xl">No Clips to Display</h3>
                                 <p className="text-muted-foreground">Your scraped clips will appear here</p>
-                                <Button variant="secondary" className="mt-5" onClick={prev_data_func} >Load Previous Data</Button>
+                                <Button variant="secondary" className="mt-5" onClick={prev_data_func} >Load Previous Clips</Button>
                               </div>
                           }
                         </div>
