@@ -9,12 +9,14 @@ export default function ClipsBox({
   clipsData,
   message,
   errorMessage,
-  twitch_url }: {
+  twitch_url,
+  prev_data_func}: {
     loading: boolean,
     clipsData: any[] | null,
     message: boolean,
     errorMessage: boolean,
-    twitch_url: string
+    twitch_url: string,
+    prev_data_func: () => {}
   }) {
   return (
     <div className="text-center my-5">
@@ -77,6 +79,7 @@ export default function ClipsBox({
                               <div>
                                 <h3 className="text-muted-foreground font-semibold text-xl">No Clips to Display</h3>
                                 <p className="text-muted-foreground">Your scraped clips will appear here</p>
+                                <Button variant="secondary" className="mt-5" onClick={prev_data_func} >Load Previous Data</Button>
                               </div>
                           }
                         </div>

@@ -197,6 +197,19 @@ export default function TwitchClips() {
     }
   }
 
+  const handlePrevData = async () => {
+    const validation = await validateUser();
+    if (validation) {
+      const clipsData = await getClipsData();
+      const finalClips = clipsData.data.data;
+      if (finalClips) {
+        setClipsData(finalClips);
+      } else {
+        console.log("No Previous Data")
+      }
+    }
+  }
+
   const handleURLSubmit = async () => {
     setBtnLoading(true);
     const allow = await validateUser();
@@ -208,16 +221,39 @@ export default function TwitchClips() {
       inputUrl = inputUrl.replace("?filter=archives&sort=time", "");
       setTwitchUrl(inputUrl);
       const timestamps = {
-        hour: tshour,
-        min: tsmin,
-        sec: tssec
+        "hour": tshour,
+        "min": tsmin,
+        "sec": tssec
       }
       const lastRequestData = await getLastRequestData(supabase)
-      if (lastRequestData !== null && lastRequestData.twitch_url == inputUrl && lastRequestData.timestamps == timestamps) {
-        const finalClips = lastRequestData.last_clips
-        setClipsData(finalClips);
-        setBtnLoading(false);
-        await increaseTotalRequests()
+      if (lastRequestData !== null) {
+        if (
+          lastRequestData.twitch_url == inputUrl &&
+          lastRequestData.timestamps.hour == timestamps.hour &&
+          lastRequestData.timestamps.min == timestamps.min &&
+          lastRequestData.timestamps.sec == timestamps.sec
+        ) {
+          const finalClips = lastRequestData.last_clips
+          setClipsData(finalClips);
+          setBtnLoading(false);
+          await increaseTotalRequests()
+        } else {
+          const twitch_url = inputUrl
+          await axios.post(`/api/supabase/update-last-request-data`, { twitch_url, timestamps });
+          setTshour(0);
+          setTsmin(0);
+          setTssec(0);
+          setUrl("");
+          const urlPattern1 = /^(https?:\/\/)?(www\.)?twitch\.tv\/videos\/\d+$/;
+          const urlPattern2 = /^(https?:\/\/)?(www\.)?twitch\.tv\/[a-zA-Z0-9_]+\/video\/\d+$/;
+          if (urlPattern1.test(inputUrl) || urlPattern2.test(inputUrl)) {
+            setUrlBanner(false);
+            twitchUrlSubmit(inputUrl, timestamps);
+          } else {
+            setUrlBanner(true);
+            setBtnLoading(false);
+          }
+        }
       } else {
         const twitch_url = inputUrl
         await axios.post(`/api/supabase/update-last-request-data`, { twitch_url, timestamps });
@@ -352,6 +388,7 @@ export default function TwitchClips() {
           errorMessage={errorMessage}
           clipsData={clipsData}
           twitch_url={twitchUrl}
+          prev_data_func={handlePrevData}
         />
         {
           requestMessage ?
