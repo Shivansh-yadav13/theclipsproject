@@ -211,32 +211,45 @@ export default function TwitchClips() {
   }
 
   const handleURLSubmit = async () => {
-    setBtnLoading(true);
-    const allow = await validateUser();
-    if (allow) {
-      var inputUrl = url
-      if (!inputUrl.startsWith("https://")) {
-        inputUrl = "https://" + inputUrl
-      }
-      inputUrl = inputUrl.replace("?filter=archives&sort=time", "");
-      setTwitchUrl(inputUrl);
-      const timestamps = {
-        "hour": tshour,
-        "min": tsmin,
-        "sec": tssec
-      }
-      const lastRequestData = await getLastRequestData(supabase)
-      if (lastRequestData !== null) {
-        if (
-          lastRequestData.twitch_url == inputUrl &&
-          lastRequestData.timestamps.hour == timestamps.hour &&
-          lastRequestData.timestamps.min == timestamps.min &&
-          lastRequestData.timestamps.sec == timestamps.sec
-        ) {
-          const finalClips = lastRequestData.last_clips
-          setClipsData(finalClips);
-          setBtnLoading(false);
-          await increaseTotalRequests()
+    var inputUrl = url
+    if (!inputUrl.startsWith("https://")) {
+      inputUrl = "https://" + inputUrl
+    }
+    inputUrl = inputUrl.replace("?filter=archives&sort=time", "");
+    setTwitchUrl(inputUrl);
+    const urlPattern1 = /^(https?:\/\/)?(www\.)?twitch\.tv\/videos\/\d+$/;
+    const urlPattern2 = /^(https?:\/\/)?(www\.)?twitch\.tv\/[a-zA-Z0-9_]+\/video\/\d+$/;
+    if (urlPattern1.test(inputUrl) || urlPattern2.test(inputUrl)) {
+      setBtnLoading(true);
+      const allow = await validateUser();
+      if (allow) {
+        const timestamps = {
+          "hour": tshour,
+          "min": tsmin,
+          "sec": tssec
+        }
+        const lastRequestData = await getLastRequestData(supabase)
+        if (lastRequestData !== null) {
+          if (
+            lastRequestData.twitch_url == inputUrl &&
+            lastRequestData.timestamps.hour == timestamps.hour &&
+            lastRequestData.timestamps.min == timestamps.min &&
+            lastRequestData.timestamps.sec == timestamps.sec
+          ) {
+            const finalClips = lastRequestData.last_clips
+            setClipsData(finalClips);
+            setBtnLoading(false);
+            await increaseTotalRequests()
+          } else {
+            const twitch_url = inputUrl
+            await axios.post(`/api/supabase/update-last-request-data`, { twitch_url, timestamps });
+            setTshour(0);
+            setTsmin(0);
+            setTssec(0);
+            setUrl("");
+            setUrlBanner(false);
+            twitchUrlSubmit(inputUrl, timestamps);
+          }
         } else {
           const twitch_url = inputUrl
           await axios.post(`/api/supabase/update-last-request-data`, { twitch_url, timestamps });
@@ -244,35 +257,15 @@ export default function TwitchClips() {
           setTsmin(0);
           setTssec(0);
           setUrl("");
-          const urlPattern1 = /^(https?:\/\/)?(www\.)?twitch\.tv\/videos\/\d+$/;
-          const urlPattern2 = /^(https?:\/\/)?(www\.)?twitch\.tv\/[a-zA-Z0-9_]+\/video\/\d+$/;
-          if (urlPattern1.test(inputUrl) || urlPattern2.test(inputUrl)) {
-            setUrlBanner(false);
-            twitchUrlSubmit(inputUrl, timestamps);
-          } else {
-            setUrlBanner(true);
-            setBtnLoading(false);
-          }
-        }
-      } else {
-        const twitch_url = inputUrl
-        await axios.post(`/api/supabase/update-last-request-data`, { twitch_url, timestamps });
-        setTshour(0);
-        setTsmin(0);
-        setTssec(0);
-        setUrl("");
-        const urlPattern1 = /^(https?:\/\/)?(www\.)?twitch\.tv\/videos\/\d+$/;
-        const urlPattern2 = /^(https?:\/\/)?(www\.)?twitch\.tv\/[a-zA-Z0-9_]+\/video\/\d+$/;
-        if (urlPattern1.test(inputUrl) || urlPattern2.test(inputUrl)) {
           setUrlBanner(false);
           twitchUrlSubmit(inputUrl, timestamps);
-        } else {
-          setUrlBanner(true);
-          setBtnLoading(false);
         }
+      } else {
+        router.push("/pricing")
       }
     } else {
-      router.push("/pricing")
+      setUrlBanner(true);
+      setBtnLoading(false);
     }
   }
 
