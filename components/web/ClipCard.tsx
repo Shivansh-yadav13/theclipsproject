@@ -70,7 +70,7 @@ export default function ClipCard({ time_stamp, f_score, twitch_url }: { time_sta
         <Image src="/play_icon.png" width={50} height={20} alt="play" />
       </button>
       <div className="flex flex-col md:text-start text-center">
-        <p><span className="font-bold">Section: </span>{`${Math.floor(time_stamp / 3600) == 0 ? "" : Math.floor(time_stamp / 3600) + ':'}${Math.floor((time_stamp % 3600) / 60)}:${time_stamp % 60} - ${Math.floor((time_stamp + 60) / 3600) == 0 ? "" : Math.floor((time_stamp + 60) / 3600)}${Math.floor(((time_stamp + 60) % 3600) / 60)}:${(time_stamp + 60) % 60}`}</p>
+        <p><span className="font-bold">Section: </span>{`${Math.floor(time_stamp / 3600) == 0 ? "" : Math.floor(time_stamp / 3600) + ':'}${Math.floor((time_stamp % 3600) / 60)}:${time_stamp % 60} - ${Math.floor((time_stamp + 60) / 3600) == 0 ? "" : Math.floor((time_stamp + 60) / 3600)}:${Math.floor(((time_stamp + 60) % 3600) / 60)}:${(time_stamp + 60) % 60}`}</p>
         <p><span className="font-bold text-primary_pink">Engagement Rate: </span>{(f_score * 100) == 100 ? (f_score * 100) : (f_score * 100).toFixed(1)}%</p>
       </div>
       <div className="flex items-center justify-center">

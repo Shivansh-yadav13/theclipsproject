@@ -7,15 +7,15 @@ export async function POST(request: Request) {
     return new Response("Method Not Allowed")
   }
   const reqdata = await request.json();
-  const { twitch_url, timestamps } = reqdata;
-  console.log(twitch_url, timestamps);
+  const { url, timestamps } = reqdata;
+  console.log(url, timestamps);
   try {
     const supabase = createServerSupabaseClient()
     const user = await supabase.auth.getUser()
     const { error } = await supabase
     .from('users')
     .update({ last_request_data: {
-      'twitch_url': twitch_url,
+      'url': url,
       'timestamps': timestamps
     }})
     .eq('id', user.data.user!.id)

@@ -57,9 +57,9 @@ const Index: NextPage = () => {
                         value={url}
                         className="lg:w-fit"
                         onChange={(e) => setUrl(e.target.value)}
-                        placeholder="Enter Twitch URL here"
+                        placeholder="Enter URL here"
                       />
-                      <Link href="/clips/twitch">
+                      <Link href="/clips">
                         <Button
                           variant="default"
                         >
@@ -85,7 +85,7 @@ const Index: NextPage = () => {
                 <div className="flex justify-center items-center gap-20 w-full overflow-x-scroll">
                   <Image src="/twitch_logo_white.png" className="grayscale hover:grayscale-0 hover:opacity-100 opacity-60 transform duration-300" alt="twitch" width={150} height={100} />
                   {/* <Image src="/youtube_logo.png" className="grayscale hover:grayscale-0 hover:opacity-100 opacity-90 transform duration-300" alt="youtube" width={150} height={250} /> */}
-                  {/* <Image src="/kick_logo.png" className="grayscale hover:grayscale-0 hover:opacity-100 opacity-90 transform duration-300" alt="kick" width={130} height={1} /> */}
+                  <Image src="/kick_logo.png" className="grayscale hover:grayscale-0 hover:opacity-100 opacity-90 transform duration-300" alt="kick" width={130} height={1} />
                 </div>
               </div>
             </div>
@@ -97,7 +97,7 @@ const Index: NextPage = () => {
                   </h1>
                   <p className="text-center mt-5 text-sm text-gray-500 lg:text-xl md:text-xl sm:mx-2">Using <span className="text-primary">Artificial intelligence</span> convert your long <span className="text-primary_blue">Boooring</span> streams to <span className="text-primary_pink">Attention</span> Grabbing Clips</p>
                   <div className="flex justify-center mt-10">
-                    <Link href="/clips/twitch">
+                    <Link href="/clips">
                       <Button
                         variant="default"
                       >

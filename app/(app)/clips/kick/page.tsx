@@ -26,11 +26,11 @@ const increaseTotalRequests = async () => {
   }
 }
 
-const storeTwitchUrl = async (url: string) => {
+const storeKickUrl = async (url: string) => {
   try {
     const formData = new FormData();
-    formData.append("twitch_url", url);
-    await axios.post('/api/supabase/add-twitch-url', formData, {
+    formData.append("kick_url", url);
+    await axios.post('/api/supabase/add-kick-url', formData, {
       headers: {
         "Content-Type": "application/json"
       }
@@ -113,9 +113,9 @@ const getServerBusyStatus = async (supabase: any) => {
   }
 }
 
-export default function TwitchClips() {
+export default function KickClips() {
   const [url, setUrl] = useState<string>("");
-  const [twitchUrl, setTwitchUrl] = useState<string>("");
+  const [kickUrl, setKickUrl] = useState<string>("");
   const [urlBanner, setUrlBanner] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [clipsData, setClipsData] = useState<any[] | null>(null);
@@ -140,7 +140,7 @@ export default function TwitchClips() {
     let clipsData, user_busy_status;
 
     do {
-      clipsData = await axios.get(`/api/fusionclipsai/twitch`);
+      clipsData = await axios.get(`/api/fusionclipsai/kick`);
       user_busy_status = clipsData.data.status;
 
       if (user_busy_status) {
@@ -152,15 +152,15 @@ export default function TwitchClips() {
     return clipsData;
   };
 
-  const twitchUrlSubmit = async (url: string, timestamps: object) => {
+  const kickUrlSubmit = async (url: string, timestamps: object) => {
     setErrorMessage(false);
     setMessage(false);
     setLoading(true);
     try {
-      storeTwitchUrl(url);
+      storeKickUrl(url);
       await reduceTrialRequests()
       await increaseTotalRequests();
-      await axios.post(`/api/fusionclipsai/twitch`, { url, timestamps });
+      await axios.post(`/api/fusionclipsai/kick`, { url, timestamps });
       const clipsData = await getClipsData();
       const finalClips = clipsData.data.data;
       if (finalClips.length == 0) {
@@ -216,10 +216,9 @@ export default function TwitchClips() {
       inputUrl = "https://" + inputUrl
     }
     inputUrl = inputUrl.replace("?filter=archives&sort=time", "");
-    setTwitchUrl(inputUrl);
-    const urlPattern1 = /^(https?:\/\/)?(www\.)?twitch\.tv\/videos\/\d+$/;
-    const urlPattern2 = /^(https?:\/\/)?(www\.)?twitch\.tv\/[a-zA-Z0-9_]+\/video\/\d+$/;
-    if (urlPattern1.test(inputUrl) || urlPattern2.test(inputUrl)) {
+    setKickUrl(inputUrl);
+    const urlPattern = /https:\/\/stream\.kick\.com\/ivs\/v1\/(\d+)\/([A-Z0-9]+)\/(\d{4})\/(\d{2})\/(\d{2})\/(\d+)\/(\d+)\/([A-Za-z0-9]+)\/media\/hls\/master\.m3u8/i;
+    if (urlPattern.test(inputUrl)) {
       setBtnLoading(true);
       const allow = await validateUser();
       if (allow) {
@@ -241,26 +240,26 @@ export default function TwitchClips() {
             setBtnLoading(false);
             await increaseTotalRequests()
           } else {
-            const twitch_url = inputUrl
-            const url = twitch_url
+            const kick_url = inputUrl
+            const url = kick_url
             await axios.post(`/api/supabase/update-last-request-data`, { url, timestamps });
             setTshour(0);
             setTsmin(0);
             setTssec(0);
             setUrl("");
             setUrlBanner(false);
-            twitchUrlSubmit(inputUrl, timestamps);
+            kickUrlSubmit(inputUrl, timestamps);
           }
         } else {
-          const twitch_url = inputUrl
-          const url = twitch_url
+          const kick_url = inputUrl
+          const url = kick_url
           await axios.post(`/api/supabase/update-last-request-data`, { url, timestamps });
           setTshour(0);
           setTsmin(0);
           setTssec(0);
           setUrl("");
           setUrlBanner(false);
-          twitchUrlSubmit(inputUrl, timestamps);
+          kickUrlSubmit(inputUrl, timestamps);
         }
       } else {
         router.push("/pricing")
@@ -313,7 +312,7 @@ export default function TwitchClips() {
           </div>
       }
       <div className="flex flex-col m-10 lg:mt-60">
-        <h1 className="text-7xl font-bold text-center">Scrape <span className="text-primary_pink">Clips</span> from <span className="text-purple-600">Twitch</span> Streams</h1>
+        <h1 className="text-7xl font-bold text-center">Scrape <span className="text-primary_pink">Clips</span> from <span className="text-green-400">Kick</span> Streams</h1>
         <div className="text-base font-light my-5 mx-auto">
           <form action="">
             <div className="flex lg:flex-row flex-col items-center justify-start gap-5">
@@ -322,7 +321,7 @@ export default function TwitchClips() {
                 value={url}
                 className="lg:w-fit"
                 onChange={(e) => setUrl(e.target.value)}
-                placeholder="Enter Twitch URL here"
+                placeholder="Enter Kick m3u8 URL here"
               />
               <Button
                 variant="default"
@@ -343,6 +342,7 @@ export default function TwitchClips() {
             </div>
           </form>
         </div>
+        <a href="https://kicktools.net/kick-vod-m3u8" target="_blank" className="underline hover:cursor-pointer text-green-400 font-mono text-xs mx-auto">Click here to get Kick&apos;s m3u8 URL</a>
         <div>
           <Accordion type="single" collapsible>
             <AccordionItem value="item-1">
@@ -382,7 +382,7 @@ export default function TwitchClips() {
           message={message}
           errorMessage={errorMessage}
           clipsData={clipsData}
-          twitch_url={twitchUrl}
+          twitch_url={kickUrl}
           prev_data_func={handlePrevData}
         />
         {
@@ -415,7 +415,11 @@ export default function TwitchClips() {
                 </button>
               </div>
               <AlertDescription>
-                Please use a Past Broadcast URL (https://www.twitch.tv/videos/12345XXXXX)
+                Please use a Kick m3u8 URL (https://stream.kick.com/ivs/v1/xxxxx/xxxxx/media/hls/master.m3u8)
+                <br />
+                <p className="font-bold">
+                  Get m3u8 url from here: <a href="https://kicktools.net/kick-vod-m3u8" target="_blank" className="underline" >https://kicktools.net/kick-vod-m3u8</a>
+                </p>
               </AlertDescription>
             </Alert>
             :
