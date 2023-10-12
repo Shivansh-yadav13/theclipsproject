@@ -96,6 +96,7 @@ const Index: NextPage = () => {
                     Tired of watching your long Streams to find Content?
                   </h1>
                   <p className="text-center mt-5 text-sm text-gray-500 lg:text-xl md:text-xl sm:mx-2">Using <span className="text-primary">Artificial intelligence</span> convert your long <span className="text-primary_blue">Boooring</span> streams to <span className="text-primary_pink">Attention</span> Grabbing Clips</p>
+                  <iframe src="https://www.guidejar.com/embed/7c76dbca-2f59-4ae4-b564-d35066240db7?type=1" className="h-96 mx-auto my-20" width="640" height="100%" allowFullScreen frameBorder="0"></iframe>
                   <div className="flex justify-center mt-10">
                     <Link href="/clips">
                       <Button
@@ -107,6 +108,7 @@ const Index: NextPage = () => {
                   </div>
                 </div>
               </div>
+              {/* <iframe src="https://www.guidejar.com/embed/7c76dbca-2f59-4ae4-b564-d35066240db7?type=1" width="100%" height="100%" allowFullScreen frameBorder="0"></iframe> */}
             </div>
             <div className="w-full my-20 mx-4 flex flex-col lg:flex-row justify-evenly gap-10">
               <div className="mx-auto text-center py-5 px-2 w-3/4 lg:w-1/5 border-4 border-muted rounded-lg bg-primary-foreground hover:border-primary_pink transform duration-150">
