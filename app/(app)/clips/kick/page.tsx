@@ -29,8 +29,8 @@ const increaseTotalRequests = async () => {
 const storeKickUrl = async (url: string) => {
   try {
     const formData = new FormData();
-    formData.append("kick_url", url);
-    await axios.post('/api/supabase/add-kick-url', formData, {
+    formData.append("twitch_url", url);
+    await axios.post('/api/supabase/add-twitch-url', formData, {
       headers: {
         "Content-Type": "application/json"
       }
@@ -157,7 +157,6 @@ export default function KickClips() {
     setMessage(false);
     setLoading(true);
     try {
-      storeKickUrl(url);
       await reduceTrialRequests()
       await increaseTotalRequests();
       await axios.post(`/api/fusionclipsai/kick`, { url, timestamps });
@@ -217,10 +216,20 @@ export default function KickClips() {
     }
     inputUrl = inputUrl.replace("?filter=archives&sort=time", "");
     setKickUrl(inputUrl);
-    const urlPattern = /https:\/\/stream\.kick\.com\/ivs\/v1\/(\d+)\/([A-Z0-9]+)\/(\d{4})\/(\d{2})\/(\d{2})\/(\d+)\/(\d+)\/([A-Za-z0-9]+)\/media\/hls\/master\.m3u8/i;
+    const urlPattern = /^https:\/\/kick\.com\/video\/[a-zA-Z0-9-]+/i;
     if (urlPattern.test(inputUrl)) {
+      const segments = url.split('/');
+      const id = segments[segments.length - 1];
+      const kick_data = await axios.get(`https://kick.com/api/v1/video/${id}`, {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+      const kick_m3u8_url = kick_data.data.source;
+      console.log(kick_m3u8_url)
       setBtnLoading(true);
       const allow = await validateUser();
+      storeKickUrl(inputUrl);
       if (allow) {
         const timestamps = {
           "hour": tshour,
@@ -240,26 +249,24 @@ export default function KickClips() {
             setBtnLoading(false);
             await increaseTotalRequests()
           } else {
-            const kick_url = inputUrl
-            const url = kick_url
+            const url = inputUrl
             await axios.post(`/api/supabase/update-last-request-data`, { url, timestamps });
             setTshour(0);
             setTsmin(0);
             setTssec(0);
             setUrl("");
             setUrlBanner(false);
-            kickUrlSubmit(inputUrl, timestamps);
+            kickUrlSubmit(kick_m3u8_url, timestamps);
           }
         } else {
-          const kick_url = inputUrl
-          const url = kick_url
+          const url = inputUrl
           await axios.post(`/api/supabase/update-last-request-data`, { url, timestamps });
           setTshour(0);
           setTsmin(0);
           setTssec(0);
           setUrl("");
           setUrlBanner(false);
-          kickUrlSubmit(inputUrl, timestamps);
+          kickUrlSubmit(kick_m3u8_url, timestamps);
         }
       } else {
         router.push("/pricing")
@@ -321,7 +328,7 @@ export default function KickClips() {
                 value={url}
                 className="lg:w-fit"
                 onChange={(e) => setUrl(e.target.value)}
-                placeholder="Enter Kick m3u8 URL here"
+                placeholder="Enter Kick URL here"
               />
               <Button
                 variant="default"
@@ -342,7 +349,6 @@ export default function KickClips() {
             </div>
           </form>
         </div>
-        <a href="https://kicktools.net/kick-vod-m3u8" target="_blank" className="underline hover:cursor-pointer text-green-400 font-mono text-xs mx-auto">Click here to get Kick&apos;s m3u8 URL</a>
         <div>
           <Accordion type="single" collapsible>
             <AccordionItem value="item-1">
