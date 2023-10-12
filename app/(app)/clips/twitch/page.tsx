@@ -18,9 +18,17 @@ import {
 import { useRouter } from "next/navigation";
 import { Subscription } from "@supabase/supabase-js";
 
-const increaseTotalRequests = async () => {
+const increaseTotalRequests = async (supabase: any) => {
   try {
-    await axios.get('/api/supabase/increase-requests');
+    const user = await getUserData(supabase);
+    const totalUserRequests = user.total_requests
+    const increasedUserRequests = totalUserRequests + 1
+
+    await supabase
+      .from('users')
+      .update({ total_requests: increasedUserRequests })
+      .eq('id', user.id)
+
   } catch (error) {
     console.log(error)
   }
@@ -159,7 +167,6 @@ export default function TwitchClips() {
     try {
       storeTwitchUrl(url);
       await reduceTrialRequests()
-      await increaseTotalRequests();
       await axios.post(`/api/fusionclipsai/twitch`, { url, timestamps });
       const clipsData = await getClipsData();
       const finalClips = clipsData.data.data;
@@ -211,6 +218,7 @@ export default function TwitchClips() {
   }
 
   const handleURLSubmit = async () => {
+    await increaseTotalRequests(supabase)
     var inputUrl = url
     if (!inputUrl.startsWith("https://")) {
       inputUrl = "https://" + inputUrl
@@ -239,7 +247,6 @@ export default function TwitchClips() {
             const finalClips = lastRequestData.last_clips
             setClipsData(finalClips);
             setBtnLoading(false);
-            await increaseTotalRequests()
           } else {
             const twitch_url = inputUrl
             const url = twitch_url

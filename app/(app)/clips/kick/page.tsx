@@ -18,9 +18,17 @@ import {
 import { useRouter } from "next/navigation";
 import { Subscription } from "@supabase/supabase-js";
 
-const increaseTotalRequests = async () => {
+const increaseTotalRequests = async (supabase: any) => {
   try {
-    await axios.get('/api/supabase/increase-requests');
+    const user = await getUserData(supabase);
+    const totalUserRequests = user.total_requests
+    const increasedUserRequests = totalUserRequests + 1
+
+    await supabase
+      .from('users')
+      .update({ total_requests: increasedUserRequests })
+      .eq('id', user.id)
+
   } catch (error) {
     console.log(error)
   }
@@ -158,7 +166,6 @@ export default function KickClips() {
     setLoading(true);
     try {
       await reduceTrialRequests()
-      await increaseTotalRequests();
       await axios.post(`/api/fusionclipsai/kick`, { url, timestamps });
       const clipsData = await getClipsData();
       const finalClips = clipsData.data.data;
@@ -210,6 +217,7 @@ export default function KickClips() {
   }
 
   const handleURLSubmit = async () => {
+    await increaseTotalRequests(supabase)
     var inputUrl = url
     if (!inputUrl.startsWith("https://")) {
       inputUrl = "https://" + inputUrl
@@ -247,7 +255,6 @@ export default function KickClips() {
             const finalClips = lastRequestData.last_clips
             setClipsData(finalClips);
             setBtnLoading(false);
-            await increaseTotalRequests()
           } else {
             const url = inputUrl
             await axios.post(`/api/supabase/update-last-request-data`, { url, timestamps });
