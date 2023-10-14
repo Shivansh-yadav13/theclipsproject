@@ -74,25 +74,13 @@ export default function Navbar() {
         </div>
       </div>
       <div className='hidden mt-5 lg:flex items-center justify-between xl:mx-60 mx-10'>
-        <h1 className='font-bold text-2xl'>
-          <Link href="/" className='flex items-center hover:text-prime_light'>
-            <Image src="/fclogo.png" width="50" height="50" alt='logo' />
-            <h1 className='text-xl font-extrabold'>Fusion Clips AI</h1>
-          </Link>
-        </h1>
-        <ul className='flex items-center justify-end gap-10 font-semibold text-sm w-1/2'>
-          {
-            user ?
-            <>
-              <NavDropdown user={user} />
-            </>
-              :
-              <li className='cursor-pointer'>
-                <Link href="/account" className='hover:text-prime_light'>
-                  Login/Create Account
-                </Link>
-              </li>
-          }
+        <ul className='flex items-center font-semibold gap-10'>
+          <h1 className='font-bold text-2xl'>
+            <Link href="/" className='flex items-center hover:text-prime_light'>
+              <Image src="/fclogo.png" width="50" height="50" alt='logo' />
+              <h1 className='text-xl font-extrabold'>Fusion Clips AI</h1>
+            </Link>
+          </h1>
           <li className='cursor-pointer'>
             <Link href="/#features" className='hover:text-prime_light'>
               Features
@@ -103,6 +91,25 @@ export default function Navbar() {
               Pricing
             </Link>
           </li>
+          <li className='cursor-pointer'>
+            <a target='_blank' href="https://discord.gg/ArKHZtMNSK" className='hover:text-prime_light'>
+              Discord
+            </a>
+          </li>
+        </ul>
+        <ul className='flex items-center justify-end gap-10 font-semibold text-sm w-1/2'>
+          {
+            user ?
+              <>
+                <NavDropdown user={user} />
+              </>
+              :
+              <li className='cursor-pointer'>
+                <Link href="/account" className='hover:text-prime_light'>
+                  Login/Create Account
+                </Link>
+              </li>
+          }
         </ul>
       </div>
     </nav>

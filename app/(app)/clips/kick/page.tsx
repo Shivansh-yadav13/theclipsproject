@@ -18,108 +18,7 @@ import {
 import { useRouter } from "next/navigation";
 import { Subscription } from "@supabase/supabase-js";
 
-const increaseTotalRequests = async (supabase: any) => {
-  try {
-    const user = await getUserData(supabase);
-    const totalUserRequests = user.total_requests
-    const increasedUserRequests = totalUserRequests + 1
-
-    await supabase
-      .from('users')
-      .update({ total_requests: increasedUserRequests })
-      .eq('id', user.id)
-
-  } catch (error) {
-    console.log(error)
-  }
-}
-
-const storeKickUrl = async (url: string) => {
-  try {
-    const formData = new FormData();
-    formData.append("twitch_url", url);
-    await axios.post('/api/supabase/add-twitch-url', formData, {
-      headers: {
-        "Content-Type": "application/json"
-      }
-    });
-  } catch (error) {
-    console.log(error)
-  }
-}
-
-const reduceTrialRequests = async () => {
-  try {
-    await axios.get('/api/supabase/reduce-trial-requests')
-  } catch (error) {
-    console.log(error)
-  }
-}
-
-const getUserData = async (supabase: any) => {
-  try {
-    const { data, error } = await supabase.auth.getUser()
-    const userId = data.user.id;
-    if (userId) {
-      const userData = await supabase.from("users").select().eq("id", userId)
-      return userData.data[0]
-    }
-  } catch (e) {
-    console.log(e)
-    return null;
-  }
-}
-
-const getUserSubscription = async (supabase: any) => {
-  try {
-    const user = await getUserData(supabase);
-    const { data, error } = await supabase
-      .from('subscriptions')
-      .select()
-      .eq('user_id', user.id)
-    if (error) {
-      console.log(error)
-      return null
-    }
-    if (data?.length == 0) {
-      return null
-    }
-    return data[0]
-  } catch (e) {
-    console.log(e)
-    return null;
-  }
-}
-
-
-const getLastRequestData = async (supabase: any) => {
-  try {
-    const user = await getUserData(supabase)
-    const { data, error } = await supabase
-      .from("users")
-      .select('last_request_data')
-      .eq('id', user.id)
-    console.log(data[0].last_request_data)
-    return data[0].last_request_data;
-  } catch (error) {
-    console.log(error)
-    return null
-  }
-}
-
-
-const getServerBusyStatus = async (supabase: any) => {
-  try {
-    const user = await getUserData(supabase);
-    const { data, error } = await supabase
-      .from('users')
-      .select('server_busy_status')
-      .eq('id', user.id)
-    return data[0].server_busy_status
-  } catch (error) {
-    console.log(error)
-  }
-}
+import { getClipsData, getLastRequestData, getServerBusyStatus, getUserData, getUserSubscription, increaseTotalRequests, storeUrl } from "../helper";
 
 export default function KickClips() {
   const [url, setUrl] = useState<string>("");
@@ -165,7 +64,6 @@ export default function KickClips() {
     setMessage(false);
     setLoading(true);
     try {
-      await reduceTrialRequests()
       await axios.post(`/api/fusionclipsai/kick`, { url, timestamps });
       const clipsData = await getClipsData();
       const finalClips = clipsData.data.data;
@@ -210,6 +108,13 @@ export default function KickClips() {
       const finalClips = clipsData.data.data;
       if (finalClips) {
         setClipsData(finalClips);
+        const lastReqData = await getLastRequestData(supabase);
+        if (lastReqData) {
+          setClipsData(lastReqData.last_clips ? lastReqData.last_clips : null)
+          setKickUrl(lastReqData.url ? lastReqData.url : null)
+        } else {
+          setMessage(true)
+        }
       } else {
         console.log("No Previous Data")
       }
@@ -237,7 +142,7 @@ export default function KickClips() {
       console.log(kick_m3u8_url)
       setBtnLoading(true);
       const allow = await validateUser();
-      storeKickUrl(inputUrl);
+      storeUrl(inputUrl);
       if (allow) {
         const timestamps = {
           "hour": tshour,
@@ -395,7 +300,7 @@ export default function KickClips() {
           message={message}
           errorMessage={errorMessage}
           clipsData={clipsData}
-          twitch_url={kickUrl}
+          url={kickUrl}
           prev_data_func={handlePrevData}
         />
         {

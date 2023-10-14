@@ -9,13 +9,13 @@ export default function ClipsBox({
   clipsData,
   message,
   errorMessage,
-  twitch_url,
+  url,
   prev_data_func}: {
     loading: boolean,
     clipsData: any[] | null,
     message: boolean,
     errorMessage: boolean,
-    twitch_url: string,
+    url: string,
     prev_data_func: () => {}
   }) {
   return (
@@ -42,7 +42,7 @@ export default function ClipsBox({
                         <ClipCard
                           time_stamp={c.time_stamp}
                           f_score={c.funniness_score}
-                          twitch_url={twitch_url}
+                          url={url}
                           key={k} />
                       ))
                     }
