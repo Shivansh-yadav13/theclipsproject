@@ -14,11 +14,11 @@ export async function POST(request: Request) {
   const { url, timestamps } = reqdata;
   try {
     const formData = new FormData();
-    formData.append('twitch_url', url);
+    formData.append('youtube_url', url);
     formData.append('start_timestamps', JSON.stringify(timestamps))
     formData.append('user_id', userId)
-    const result = await axios.post(`https://fusionclipsai.up.railway.app/analyze_twitch_audio`, formData);
-    // const result = await axios.post(`http://localhost:8080/analyze_twitch_audio`, formData);
+    // const result = await axios.post(`https://fusionclipsai.up.railway.app/analyze_youtube_audio`, formData);
+    const result = await axios.post(`http://localhost:8080/analyze_youtube_audio`, formData);
     return new Response(JSON.stringify({ result : true }));
   } catch (error) {
     console.log(error)
