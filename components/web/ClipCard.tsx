@@ -14,7 +14,7 @@ export default function ClipCard({ time_stamp, f_score, url }: { time_stamp: num
     try {
       setDownloading(true);
       const formData = new FormData();
-      formData.append("twitch_url", url)
+      formData.append("url", url)
       const seconds = time_stamp.toString()
       formData.append('start_timestamps_sec', seconds)
       setProgress(30);
@@ -28,7 +28,7 @@ export default function ClipCard({ time_stamp, f_score, url }: { time_stamp: num
 
       const link = document.createElement('a');
       link.href = videoUrl;
-      link.download = `fusion-clips-${url.replace("https://www.twitch.tv/videos/", "")}-${seconds}.flv`;
+      link.download = `fusion-clips-${url}-${seconds}.flv`;
       link.click();
 
       URL.revokeObjectURL(videoUrl);
@@ -70,12 +70,12 @@ export default function ClipCard({ time_stamp, f_score, url }: { time_stamp: num
         <Image src="/play_icon.png" width={50} height={20} alt="play" />
       </button> */}
       <div className="flex flex-col md:text-start text-center">
-        <p><span className="font-bold">Section: </span>{`${Math.floor(time_stamp / 3600) == 0 ? "" : Math.floor(time_stamp / 3600) + ':'}${Math.floor((time_stamp % 3600) / 60)}:${time_stamp % 60} - ${Math.floor((time_stamp + 60) / 3600) == 0 ? "" : Math.floor((time_stamp + 60) / 3600)}:${Math.floor(((time_stamp + 60) % 3600) / 60)}:${(time_stamp + 60) % 60}`}</p>
+        <p><span className="font-bold">Section: </span>{`${Math.floor(time_stamp / 3600) == 0 ? "" : Math.floor(time_stamp / 3600) + ':'}${Math.floor((time_stamp % 3600) / 60)}:${time_stamp % 60} - ${Math.floor((time_stamp + 60) / 3600) == 0 ? "" : ":" + Math.floor((time_stamp + 60) / 3600)}${Math.floor(((time_stamp + 60) % 3600) / 60)}:${(time_stamp + 60) % 60}`}</p>
         <p><span className="font-bold text-primary_pink">Engagement Rate: </span>{(f_score * 100) == 100 ? (f_score * 100) : (f_score * 100).toFixed(1)}%</p>
       </div>
       <div className="flex items-center justify-center">
         <Button variant="link">
-          <a target="_blank" href={url + `?t=${time_stamp}s`} >Watch Clip</a>
+          <a target="_blank" href={url + `&t=${time_stamp}s`} >Watch Clip</a>
         </Button>
         <Button onClick={handleDownload} disabled={downloading}>
           { downloading ? "Downloading..." : "Download Clip"}
